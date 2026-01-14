@@ -129,9 +129,6 @@ export default function DetectiveLanding() {
           box-shadow: 0 14px 40px rgba(0,0,0,0.6), inset 0 0 18px rgba(0,0,0,0.06);
           transition: transform 220ms cubic-bezier(.2,.8,.2,1);
         }
-        .polaroid:hover {
-          transform: translateY(-8px) rotate(-1deg) scale(1.02);
-        }
 
         .tape {
           width: 70px;
