@@ -1,7 +1,6 @@
-// DetectiveLanding.jsx
 'use client'
 
-import React, { useRef, useState, useEffect } from 'react'
+import React, { useRef } from 'react'
 
 export default function DetectiveLanding() {
   const containerRef = useRef(null)
@@ -9,46 +8,6 @@ export default function DetectiveLanding() {
   const panoramicRef = useRef(null)
   const notesRef = useRef(null)
   const evidenceRef = useRef(null)
-
-  const [lines, setLines] = useState([])
-
-  // compute anchor points for svg lines
-  const computeLines = () => {
-    const container = containerRef.current
-    if (!container) return
-
-    const getCenter = (el) => {
-      if (!el) return null
-      const r = el.getBoundingClientRect()
-      const c = container.getBoundingClientRect()
-      return { x: r.left + r.width / 2 - c.left, y: r.top + r.height / 2 - c.top }
-    }
-
-    const a = getCenter(portraitRef.current)
-    const b = getCenter(notesRef.current)
-    const c = getCenter(panoramicRef.current)
-    const d = getCenter(evidenceRef.current)
-
-    const newLines = []
-    if (a && b) newLines.push({ from: a, to: b })
-    if (b && c) newLines.push({ from: b, to: c })
-    if (c && d) newLines.push({ from: c, to: d })
-    if (a && d) newLines.push({ from: a, to: d }) // extra connection
-    setLines(newLines)
-  }
-
-  useEffect(() => {
-    computeLines()
-    const handle = () => computeLines()
-    window.addEventListener('resize', handle)
-    // observe mutations that may change layout (font load, images)
-    const ro = new ResizeObserver(() => computeLines())
-    if (containerRef.current) ro.observe(containerRef.current)
-    return () => {
-      window.removeEventListener('resize', handle)
-      ro.disconnect()
-    }
-  }, [])
 
   const handleLookAround = () => {
     console.log('Navigating to hub environment...')
@@ -90,9 +49,6 @@ export default function DetectiveLanding() {
           box-shadow: 0 14px 40px rgba(0,0,0,0.6), inset 0 0 18px rgba(0,0,0,0.06);
           transition: transform 220ms cubic-bezier(.2,.8,.2,1);
         }
-        .polaroid:hover {
-          transform: translateY(-8px) rotate(-1deg) scale(1.02);
-        }
 
         /* tape piece with grain */
         .tape {
@@ -122,34 +78,29 @@ export default function DetectiveLanding() {
           transform-origin: center;
           transition: transform 200ms;
         }
-        .sticky:hover { transform: translateY(-6px) rotate(0.5deg); }
 
-        /* little pin/metal */
+        /* thumbtack/pin */
         .pin {
-          width: 12px;
-          height: 12px;
-          background: radial-gradient(circle at 40% 30%, #fff8e6 0%, #e6c7b0 38%, #b44d4d 100%);
+          width: 16px;
+          height: 16px;
+          background: radial-gradient(circle at 35% 25%, #ffd700 0%, #c4a000 45%, #8b6914 100%);
           border-radius: 50%;
-          box-shadow: 0 3px 6px rgba(0,0,0,0.6), inset 0 -1px 2px rgba(0,0,0,0.35);
+          box-shadow: 0 4px 8px rgba(0,0,0,0.7), inset 0 -2px 3px rgba(0,0,0,0.4), inset 0 1px 2px rgba(255,255,255,0.3);
           position: absolute;
           z-index: 60;
         }
-
-        /* red string animation */
-        .string {
-          stroke: #cf2b2b;
-          stroke-width: 2.6;
-          stroke-linecap: round;
-          filter: drop-shadow(0 2px 6px rgba(0,0,0,0.6));
+        .pin:after {
+          content: '';
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          width: 4px;
+          height: 4px;
+          background: radial-gradient(circle, #333, #000);
+          border-radius: 50%;
+          box-shadow: 0 1px 2px rgba(255,255,255,0.4);
         }
-
-        /* tiny wiggle to make strings look alive */
-        @keyframes wiggle {
-          0% { transform: translateY(0) }
-          50% { transform: translateY(-4px) }
-          100% { transform: translateY(0) }
-        }
-        .string-group { animation: wiggle 3.6s ease-in-out infinite; transform-origin: center; }
 
         /* look-around button */
         .look-btn {
@@ -182,28 +133,7 @@ export default function DetectiveLanding() {
           overflow: 'hidden'
         }}
       >
-        {/* dynamic SVG overlay for strings */}
-        <svg
-          width="100%"
-          height="100%"
-          style={{ position: 'absolute', left: 0, top: 0, pointerEvents: 'none', zIndex: 20 }}
-        >
-          <g className="string-group">
-            {lines.map((l, i) => {
-              // create a slight curve using control points
-              const dx = l.to.x - l.from.x
-              const dy = l.to.y - l.from.y
-              const cx1 = l.from.x + dx * 0.25
-              const cy1 = l.from.y + dy * 0.05 - 20
-              const cx2 = l.from.x + dx * 0.75
-              const cy2 = l.from.y + dy * 0.95 + 20
-              const d = `M ${l.from.x} ${l.from.y} C ${cx1} ${cy1} ${cx2} ${cy2} ${l.to.x} ${l.to.y}`
-              return <path key={i} d={d} className="string" style={{ strokeDasharray: '2 1.5' }} />
-            })}
-          </g>
-        </svg>
-
-        {/* Pins (rendered near items to look like tack points) */}
+        {/* Portrait photo with pins */}
         <div
           ref={portraitRef}
           style={{
@@ -232,10 +162,12 @@ export default function DetectiveLanding() {
               }}
             />
           </div>
-          <div className="pin" style={{ left: '34%', top: '30%' }} />
+          {/* Thumbtacks on portrait */}
+          <div className="pin" style={{ left: -8, top: -8 }} />
+          <div className="pin" style={{ right: -8, top: -8 }} />
         </div>
 
-        {/* Field Notes (document) */}
+        {/* Field Notes (document) with pins */}
         <div
           ref={notesRef}
           style={{
@@ -273,10 +205,11 @@ export default function DetectiveLanding() {
             <li>Python tooling / automation</li>
             <li>Aeroacoustics analysis</li>
           </ul>
-          <div className="pin" style={{ left: 8, top: -6 }} />
+          {/* Thumbtack on notes */}
+          <div className="pin" style={{ left: '50%', top: -12, transform: 'translateX(-50%)' }} />
         </div>
 
-        {/* Panoramic */}
+        {/* Panoramic with pins */}
         <div
           ref={panoramicRef}
           style={{
@@ -298,10 +231,12 @@ export default function DetectiveLanding() {
               style={{ width: '100%', height: '100%', objectFit: 'cover', filter: 'sepia(0.15) contrast(1.04)' }}
             />
           </div>
-          <div className="pin" style={{ left: '16%', top: '20%' }} />
+          {/* Thumbtacks on panoramic */}
+          <div className="pin" style={{ left: -8, top: '50%', transform: 'translateY(-50%)' }} />
+          <div className="pin" style={{ right: -8, top: '50%', transform: 'translateY(-50%)' }} />
         </div>
 
-        {/* Evidence tag */}
+        {/* Evidence tag with pin */}
         <div
           ref={evidenceRef}
           style={{
@@ -323,10 +258,10 @@ export default function DetectiveLanding() {
         >
           EVIDENCE #047
           <div style={{ fontSize: 11, marginTop: 6, fontWeight: 400 }}>STATUS: ACTIVE INVESTIGATION</div>
-          <div className="pin" style={{ left: -10, top: -8 }} />
+          <div className="pin" style={{ left: '50%', top: -10, transform: 'translateX(-50%)' }} />
         </div>
 
-        {/* Sticky notes */}
+        {/* Sticky notes with pins */}
         <div
           style={{
             position: 'absolute',
@@ -352,6 +287,7 @@ export default function DetectiveLanding() {
             ✓ Propeller dynamics<br />
             ✓ Thermal & systems
           </div>
+          <div className="pin" style={{ left: '50%', top: -8, transform: 'translateX(-50%)' }} />
         </div>
 
         <div
@@ -379,9 +315,10 @@ export default function DetectiveLanding() {
             <br />
             Munich, Germany
           </div>
+          <div className="pin" style={{ left: '50%', top: -8, transform: 'translateX(-50%)' }} />
         </div>
 
-        {/* propsed decorative props */}
+        {/* Decorative props */}
         <img
           src="/Assets/Magnifying Glass.png"
           alt="Magnifying glass"
