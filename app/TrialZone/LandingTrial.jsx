@@ -7,7 +7,6 @@ export default function DetectiveLanding() {
 
   const handleLookAround = () => {
     console.log('Navigating to hub environment...')
-    // In actual implementation: router.push('/hub')
   }
 
   return (
@@ -19,7 +18,7 @@ export default function DetectiveLanding() {
       overflow: 'hidden',
       fontFamily: 'system-ui, sans-serif'
     }}>
-      <style>{`
+      <style dangerouslySetInnerHTML={{__html: `
         @import url('https://fonts.googleapis.com/css2?family=Special+Elite&display=swap');
         @import url('https://fonts.googleapis.com/css2?family=Permanent+Marker&display=swap');
 
@@ -118,7 +117,7 @@ export default function DetectiveLanding() {
         .arrow-down {
           animation: arrow-bounce 1.5s ease-in-out infinite;
         }
-      `}</style>
+      `}} />
 
       {/* Investigation Board */}
       <div style={{
@@ -130,45 +129,32 @@ export default function DetectiveLanding() {
         padding: '3rem'
       }}>
         
-        {/* Red String Connections */}
+        {/* Red String Connections - Updated positions */}
         <div className="red-string" style={{
-          left: '28%',
-          top: '25%',
+          left: '15%',
+          top: '20%',
+          width: '320px',
+          transform: 'rotate(15deg)'
+        }} />
+        <div className="red-string" style={{
+          left: '48%',
+          top: '28%',
           width: '220px',
-          transform: 'rotate(25deg)'
+          transform: 'rotate(-20deg)'
         }} />
         <div className="red-string" style={{
-          left: '45%',
-          top: '30%',
-          width: '180px',
-          transform: 'rotate(-15deg)'
-        }} />
-        <div className="red-string" style={{
-          left: '35%',
+          left: '38%',
           top: '55%',
-          width: '250px',
-          transform: 'rotate(45deg)'
-        }} />
-        <div className="red-string" style={{
-          left: '60%',
-          top: '40%',
-          width: '160px',
-          transform: 'rotate(70deg)'
-        }} />
-        <div className="red-string" style={{
-          left: '52%',
-          top: '65%',
-          width: '200px',
-          transform: 'rotate(-30deg)'
+          width: '180px',
+          transform: 'rotate(35deg)'
         }} />
 
-        {/* Pins scattered across */}
-        <div className="pin" style={{ left: '28%', top: '25%' }} />
+        {/* Pins - Updated positions to match strings */}
+        <div className="pin" style={{ left: '15%', top: '20%' }} />
         <div className="pin" style={{ left: '48%', top: '28%' }} />
-        <div className="pin" style={{ left: '62%', top: '35%' }} />
-        <div className="pin" style={{ left: '38%', top: '52%' }} />
-        <div className="pin" style={{ left: '65%', top: '58%' }} />
-        <div className="pin" style={{ left: '72%', top: '68%' }} />
+        <div className="pin" style={{ left: '58%', top: '22%' }} />
+        <div className="pin" style={{ left: '38%', top: '55%' }} />
+        <div className="pin" style={{ left: '28%', top: '72%' }} />
 
         {/* Portrait Photo 1 - Top Left */}
         <div 
@@ -259,7 +245,7 @@ export default function DetectiveLanding() {
             FIELD NOTES
           </div>
           Subject: Chinmay Patil<br/>
-          Location: Munich Lab<br/>
+          Location: Previous Known Location<br/>
           Specialty: CFD Engineering<br/>
           <br/>
           <span style={{ color: '#d32f2f' }}>Key Skills:</span><br/>
@@ -366,35 +352,42 @@ export default function DetectiveLanding() {
           </div>
         </div>
 
-        {/* Magnifying Glass overlay effect */}
-        <div style={{
-          position: 'absolute',
-          right: '8%',
-          bottom: '25%',
-          width: '100px',
-          height: '100px',
-          borderRadius: '50%',
-          border: '6px solid #8b6914',
-          background: 'radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%)',
-          boxShadow: '0 8px 24px rgba(0,0,0,0.6), inset 0 2px 8px rgba(255,255,255,0.3)',
-          transform: 'rotate(25deg)',
-          zIndex: 12,
-          pointerEvents: 'none'
-        }}>
-          <div style={{
+        {/* Magnifying Glass - using image asset */}
+        <img 
+          src="/Assets/Magnifying Glass.png"
+          alt="Magnifying glass"
+          style={{
             position: 'absolute',
-            bottom: '-60px',
-            left: '45%',
-            width: '12px',
-            height: '70px',
-            background: 'linear-gradient(180deg, #6b5010 0%, #4a3508 100%)',
-            transform: 'rotate(45deg)',
-            boxShadow: '0 4px 8px rgba(0,0,0,0.8)'
-          }} />
-        </div>
+            right: '8%',
+            bottom: '25%',
+            width: '200px',
+            height: '200px',
+            transform: 'rotate(0deg)',
+            filter: 'drop-shadow(0 8px 24px rgba(0,0,0,0.6))',
+            zIndex: 12,
+            pointerEvents: 'none'
+          }}
+        />
+
+        {/* Compass - using image asset */}
+        <img 
+          src="/Assets/Compass.png"
+          alt="Compass"
+          style={{
+            position: 'absolute',
+            left: '5%',
+            bottom: '15%',
+            width: '150px',
+            height: '150px',
+            transform: 'rotate(-15deg)',
+            filter: 'drop-shadow(0 6px 18px rgba(0,0,0,0.7))',
+            zIndex: 11,
+            pointerEvents: 'none'
+          }}
+        />
       </div>
 
-      {/* Look Around Button - Bottom of page, outside map */}
+      {/* Look Around Button - Bottom of page */}
       <div style={{
         position: 'fixed',
         bottom: '40px',
