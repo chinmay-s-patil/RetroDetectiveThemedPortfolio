@@ -1,0 +1,5 @@
+# Only ignore what's absolutely unnecessary
+*.md
+README.md
+.vscode
+.DS_Store
