@@ -1,7 +1,7 @@
 import dynamic from 'next/dynamic'
 
 // Lazy load heavy sections to reduce initial bundle size
-const DetectiveLanding = dynamic(() => import('./TrialZone/LandingTrial'), {
+const DetectiveLanding = dynamic(() => import('./Detective Landing/DetectiveLanding'), {
   loading: () => null,
 })
 

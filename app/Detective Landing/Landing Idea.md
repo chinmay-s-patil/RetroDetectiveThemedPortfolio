@@ -1,7 +1,3 @@
-Absolutely — let me **walk you through the LandingMap as if you’re seeing it in front of you**, not as code. Think of this as the *design spec* for the opening scene of your site.
-
----
-
 ## Overall Vibe (what the user feels immediately)
 
 You land on the page and it feels like:
@@ -48,7 +44,7 @@ It fills most of the left side.
 
 Under the photo, handwritten or typed:
 
-> *“Field notes — Munich lab”*
+> *“Last Known Location - Munich”*
 > (or wherever you prefer)
 
 This instantly answers:
@@ -202,13 +198,3 @@ This primes them emotionally before content.
 If I had to describe a screenshot in one paragraph:
 
 > A weathered paper map lies on a desk, covered in sticky notes and a taped photo. White-outlined clues invite clicks. A sidebar summarizes the subject of the case. A button at the bottom says “Look around.” It feels like the opening scene of a mystery — except the mystery is you.
-
----
-
-If you want next, I can:
-
-* Turn this into a **one-page design checklist** so you don’t overbuild
-* Help you **decide what NOT to include** on the landing (very important)
-* Or map **exact hotspot positions → sections** so implementation is dead simple
-
-You’ve designed a *story*, not just a site — and this landing nails the opening scene.

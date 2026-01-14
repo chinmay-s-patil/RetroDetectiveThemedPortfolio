@@ -1,429 +1,428 @@
+// DetectiveLanding.jsx
 'use client'
 
-import React, { useState } from 'react'
+import React, { useRef, useState, useEffect } from 'react'
 
 export default function DetectiveLanding() {
-  const [hoveredItem, setHoveredItem] = useState(null)
+  const containerRef = useRef(null)
+  const portraitRef = useRef(null)
+  const panoramicRef = useRef(null)
+  const notesRef = useRef(null)
+  const evidenceRef = useRef(null)
+
+  const [lines, setLines] = useState([])
+
+  // compute anchor points for svg lines
+  const computeLines = () => {
+    const container = containerRef.current
+    if (!container) return
+
+    const getCenter = (el) => {
+      if (!el) return null
+      const r = el.getBoundingClientRect()
+      const c = container.getBoundingClientRect()
+      return { x: r.left + r.width / 2 - c.left, y: r.top + r.height / 2 - c.top }
+    }
+
+    const a = getCenter(portraitRef.current)
+    const b = getCenter(notesRef.current)
+    const c = getCenter(panoramicRef.current)
+    const d = getCenter(evidenceRef.current)
+
+    const newLines = []
+    if (a && b) newLines.push({ from: a, to: b })
+    if (b && c) newLines.push({ from: b, to: c })
+    if (c && d) newLines.push({ from: c, to: d })
+    if (a && d) newLines.push({ from: a, to: d }) // extra connection
+    setLines(newLines)
+  }
+
+  useEffect(() => {
+    computeLines()
+    const handle = () => computeLines()
+    window.addEventListener('resize', handle)
+    // observe mutations that may change layout (font load, images)
+    const ro = new ResizeObserver(() => computeLines())
+    if (containerRef.current) ro.observe(containerRef.current)
+    return () => {
+      window.removeEventListener('resize', handle)
+      ro.disconnect()
+    }
+  }, [])
 
   const handleLookAround = () => {
     console.log('Navigating to hub environment...')
   }
 
   return (
-    <div style={{
-      width: '100vw',
-      height: '100vh',
-      background: 'radial-gradient(circle at 40% 40%, #2a2318 0%, #12100c 60%, #000000 100%)',
-      position: 'relative',
-      overflow: 'hidden',
-      fontFamily: 'system-ui, sans-serif'
-    }}>
+    <div
+      ref={containerRef}
+      style={{
+        width: '100vw',
+        height: '100vh',
+        background:
+          'radial-gradient(circle at 20% 15%, #3a2b20 0%, #221a12 30%, #0f0d0a 100%)',
+        position: 'relative',
+        overflow: 'hidden',
+        fontFamily: "Special Elite, 'Permanent Marker', system-ui, sans-serif",
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        color: '#1b1b1b'
+      }}
+    >
+      {/* Fonts */}
       <style dangerouslySetInnerHTML={{__html: `
         @import url('https://fonts.googleapis.com/css2?family=Special+Elite&display=swap');
         @import url('https://fonts.googleapis.com/css2?family=Permanent+Marker&display=swap');
 
-        .tattered-paper {
-          filter: drop-shadow(0 8px 16px rgba(0,0,0,0.6));
-          clip-path: polygon(
-            2% 1%, 8% 0%, 15% 2%, 22% 0%, 30% 1%, 38% 0%, 
-            45% 2%, 52% 0%, 60% 1%, 68% 0%, 75% 2%, 82% 1%, 
-            90% 0%, 95% 1%, 98% 3%, 99% 8%, 100% 15%, 99% 22%,
-            100% 30%, 99% 38%, 100% 45%, 99% 52%, 100% 60%, 
-            99% 68%, 100% 75%, 98% 82%, 100% 88%, 99% 93%, 
-            97% 97%, 92% 99%, 85% 98%, 78% 100%, 70% 99%, 
-            62% 100%, 55% 98%, 48% 99%, 40% 100%, 32% 98%, 
-            25% 99%, 18% 100%, 10% 98%, 5% 96%, 2% 92%, 
-            0% 85%, 1% 78%, 0% 70%, 2% 62%, 0% 55%, 1% 48%, 
-            0% 40%, 2% 32%, 0% 25%, 1% 18%, 0% 10%, 2% 5%
-          );
+        /* subtle paper texture using gradients */
+        .board {
+          background:
+            linear-gradient(180deg, rgba(250,244,232,0.98), rgba(238,224,200,0.96)),
+            repeating-linear-gradient(45deg, rgba(0,0,0,0.02) 0 1px, transparent 1px 8px);
+          background-blend-mode: multiply;
         }
 
-        .burnt-edge {
-          position: relative;
+        /* Polaroid style frames */
+        .polaroid {
+          border: 10px solid #f6efe2;
+          box-shadow: 0 14px 40px rgba(0,0,0,0.6), inset 0 0 18px rgba(0,0,0,0.06);
+          transition: transform 220ms cubic-bezier(.2,.8,.2,1);
+        }
+        .polaroid:hover {
+          transform: translateY(-8px) rotate(-1deg) scale(1.02);
         }
 
-        .burnt-edge::before {
+        /* tape piece with grain */
+        .tape {
+          width: 70px;
+          height: 20px;
+          background: linear-gradient(90deg, rgba(245,238,210,0.85), rgba(230,218,180,0.85));
+          box-shadow: 0 4px 8px rgba(0,0,0,0.35);
+          border-radius: 2px;
+          transform-origin: center;
+          opacity: 0.95;
+          position: absolute;
+          z-index: 30;
+          filter: saturate(0.95);
+        }
+        .tape:after {
           content: '';
           position: absolute;
-          inset: -5px;
-          background: linear-gradient(135deg, 
-            transparent 30%, 
-            rgba(40, 20, 0, 0.3) 40%, 
-            rgba(60, 30, 0, 0.5) 50%, 
-            rgba(30, 15, 0, 0.4) 60%,
-            transparent 70%
-          );
-          pointer-events: none;
-          z-index: 1;
+          inset: 0;
+          background-image: linear-gradient( to right, rgba(0,0,0,0.03), transparent 15%, rgba(255,255,255,0.05) 55%, transparent 85% );
+          mix-blend-mode: multiply;
         }
 
-        .red-string {
-          position: absolute;
-          height: 2px;
-          background: #d32f2f;
-          transform-origin: left center;
-          box-shadow: 0 0 4px rgba(211, 47, 47, 0.6);
+        /* sticky notes */
+        .sticky {
+          box-shadow: 0 10px 30px rgba(0,0,0,0.45);
+          border-radius: 6px;
+          transform-origin: center;
+          transition: transform 200ms;
         }
+        .sticky:hover { transform: translateY(-6px) rotate(0.5deg); }
 
+        /* little pin/metal */
         .pin {
           width: 12px;
           height: 12px;
-          background: radial-gradient(circle, #c41e1e 40%, #8b0000 100%);
+          background: radial-gradient(circle at 40% 30%, #fff8e6 0%, #e6c7b0 38%, #b44d4d 100%);
           border-radius: 50%;
-          box-shadow: 0 2px 4px rgba(0,0,0,0.8), inset 0 -1px 2px rgba(0,0,0,0.5);
+          box-shadow: 0 3px 6px rgba(0,0,0,0.6), inset 0 -1px 2px rgba(0,0,0,0.35);
           position: absolute;
-          z-index: 20;
+          z-index: 60;
         }
 
-        .photo-item {
-          transition: transform 0.2s ease, filter 0.2s ease;
+        /* red string animation */
+        .string {
+          stroke: #cf2b2b;
+          stroke-width: 2.6;
+          stroke-linecap: round;
+          filter: drop-shadow(0 2px 6px rgba(0,0,0,0.6));
+        }
+
+        /* tiny wiggle to make strings look alive */
+        @keyframes wiggle {
+          0% { transform: translateY(0) }
+          50% { transform: translateY(-4px) }
+          100% { transform: translateY(0) }
+        }
+        .string-group { animation: wiggle 3.6s ease-in-out infinite; transform-origin: center; }
+
+        /* look-around button */
+        .look-btn {
+          font-family: Special Elite, monospace;
+          font-size: 18px;
+          background: linear-gradient(180deg, rgba(255,255,255,0.94), rgba(245,240,230,0.92));
+          color: #281b12;
+          padding: 12px 26px;
+          border-radius: 8px;
+          border: 2px solid rgba(139,69,19,0.9);
+          box-shadow: 0 10px 28px rgba(0,0,0,0.45);
+          transition: transform 160ms, box-shadow 160ms;
           cursor: pointer;
+          user-select: none;
         }
-
-        .photo-item:hover {
-          transform: scale(1.05) !important;
-          filter: brightness(1.1);
-          z-index: 15 !important;
-        }
-
-        @keyframes glow-pulse {
-          0%, 100% {
-            text-shadow: 
-              0 0 10px rgba(255, 255, 255, 0.8),
-              0 0 20px rgba(255, 255, 255, 0.6),
-              0 0 30px rgba(255, 59, 59, 0.8),
-              0 0 40px rgba(255, 59, 59, 0.6);
-            transform: translateY(0);
-          }
-          50% {
-            text-shadow: 
-              0 0 15px rgba(255, 255, 255, 1),
-              0 0 30px rgba(255, 255, 255, 0.8),
-              0 0 45px rgba(255, 59, 59, 1),
-              0 0 60px rgba(255, 59, 59, 0.8);
-            transform: translateY(-3px);
-          }
-        }
-
-        .look-around-button {
-          animation: glow-pulse 2s ease-in-out infinite;
-        }
-
-        @keyframes arrow-bounce {
-          0%, 100% { transform: translateY(0); opacity: 1; }
-          50% { transform: translateY(8px); opacity: 0.7; }
-        }
-
-        .arrow-down {
-          animation: arrow-bounce 1.5s ease-in-out infinite;
-        }
+        .look-btn:hover { transform: translateY(-6px); box-shadow: 0 18px 40px rgba(0,0,0,0.5); }
       `}} />
 
-      {/* Investigation Board */}
-      <div style={{
-        position: 'absolute',
-        inset: 0,
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        padding: '3rem'
-      }}>
-        
-        {/* Red String Connections - Updated positions */}
-        <div className="red-string" style={{
-          left: '15%',
-          top: '20%',
-          width: '320px',
-          transform: 'rotate(15deg)'
-        }} />
-        <div className="red-string" style={{
-          left: '48%',
-          top: '28%',
-          width: '220px',
-          transform: 'rotate(-20deg)'
-        }} />
-        <div className="red-string" style={{
-          left: '38%',
-          top: '55%',
-          width: '180px',
-          transform: 'rotate(35deg)'
-        }} />
-
-        {/* Pins - Updated positions to match strings */}
-        <div className="pin" style={{ left: '15%', top: '20%' }} />
-        <div className="pin" style={{ left: '48%', top: '28%' }} />
-        <div className="pin" style={{ left: '58%', top: '22%' }} />
-        <div className="pin" style={{ left: '38%', top: '55%' }} />
-        <div className="pin" style={{ left: '28%', top: '72%' }} />
-
-        {/* Portrait Photo 1 - Top Left */}
-        <div 
-          className="photo-item tattered-paper burnt-edge"
-          onMouseEnter={() => setHoveredItem('photo1')}
-          onMouseLeave={() => setHoveredItem(null)}
-          style={{
-            position: 'absolute',
-            left: '15%',
-            top: '12%',
-            width: '240px',
-            height: '180px',
-            transform: 'rotate(-8deg)',
-            zIndex: hoveredItem === 'photo1' ? 15 : 5
-          }}
+      {/* Main board */}
+      <div
+        className="board"
+        style={{
+          position: 'relative',
+          width: '86vw',
+          height: '80vh',
+          borderRadius: 10,
+          padding: '2.6rem',
+          border: '10px solid rgba(20,14,10,0.9)',
+          boxShadow: '0 28px 80px rgba(0,0,0,0.85), inset 0 0 30px rgba(0,0,0,0.35)',
+          overflow: 'hidden'
+        }}
+      >
+        {/* dynamic SVG overlay for strings */}
+        <svg
+          width="100%"
+          height="100%"
+          style={{ position: 'absolute', left: 0, top: 0, pointerEvents: 'none', zIndex: 20 }}
         >
-          <img 
-            src="/portrait.jpg" 
-            alt="Portrait" 
-            style={{
-              width: '100%',
-              height: '100%',
-              objectFit: 'cover',
-              border: '8px solid #f5f0e8',
-              boxShadow: '0 4px 12px rgba(0,0,0,0.6)',
-              filter: 'sepia(0.2) contrast(1.1)'
-            }}
-          />
-        </div>
+          <g className="string-group">
+            {lines.map((l, i) => {
+              // create a slight curve using control points
+              const dx = l.to.x - l.from.x
+              const dy = l.to.y - l.from.y
+              const cx1 = l.from.x + dx * 0.25
+              const cy1 = l.from.y + dy * 0.05 - 20
+              const cx2 = l.from.x + dx * 0.75
+              const cy2 = l.from.y + dy * 0.95 + 20
+              const d = `M ${l.from.x} ${l.from.y} C ${cx1} ${cy1} ${cx2} ${cy2} ${l.to.x} ${l.to.y}`
+              return <path key={i} d={d} className="string" style={{ strokeDasharray: '2 1.5' }} />
+            })}
+          </g>
+        </svg>
 
-        {/* Wide Panoramic Photo - Center */}
-        <div 
-          className="photo-item tattered-paper burnt-edge"
-          onMouseEnter={() => setHoveredItem('photo2')}
-          onMouseLeave={() => setHoveredItem(null)}
-          style={{
-            position: 'absolute',
-            left: '35%',
-            top: '45%',
-            width: '420px',
-            height: '140px',
-            transform: 'rotate(3deg)',
-            zIndex: hoveredItem === 'photo2' ? 15 : 6
-          }}
-        >
-          <img 
-            src="/Me2-3x8.jpg" 
-            alt="Panoramic view" 
-            style={{
-              width: '100%',
-              height: '100%',
-              objectFit: 'cover',
-              border: '8px solid #f5f0e8',
-              boxShadow: '0 6px 16px rgba(0,0,0,0.7)',
-              filter: 'sepia(0.15) contrast(1.05)'
-            }}
-          />
-        </div>
-
-        {/* Document 1 - "Field Notes" */}
-        <div 
-          className="photo-item tattered-paper burnt-edge"
-          onMouseEnter={() => setHoveredItem('doc1')}
-          onMouseLeave={() => setHoveredItem(null)}
-          style={{
-            position: 'absolute',
-            left: '58%',
-            top: '18%',
-            width: '280px',
-            padding: '20px',
-            background: 'linear-gradient(135deg, #faf8f0 0%, #f0e8d8 100%)',
-            transform: 'rotate(5deg)',
-            fontFamily: 'Special Elite, monospace',
-            fontSize: '13px',
-            lineHeight: '1.8',
-            color: '#2a2a2a',
-            boxShadow: '0 8px 20px rgba(0,0,0,0.6)',
-            zIndex: hoveredItem === 'doc1' ? 15 : 7
-          }}
-        >
-          <div style={{ 
-            borderBottom: '2px solid #8b4513', 
-            marginBottom: '12px',
-            paddingBottom: '8px',
-            fontFamily: 'Permanent Marker, cursive',
-            fontSize: '16px'
-          }}>
-            FIELD NOTES
-          </div>
-          Subject: Chinmay Patil<br/>
-          Location: Previous Known Location<br/>
-          Specialty: CFD Engineering<br/>
-          <br/>
-          <span style={{ color: '#d32f2f' }}>Key Skills:</span><br/>
-          • OpenFOAM<br/>
-          • Python pipelines<br/>
-          • Aeroacoustics<br/>
-          • Visual tools
-        </div>
-
-        {/* Sticky Note 1 */}
-        <div 
-          className="photo-item"
-          onMouseEnter={() => setHoveredItem('note1')}
-          onMouseLeave={() => setHoveredItem(null)}
+        {/* Pins (rendered near items to look like tack points) */}
+        <div
+          ref={portraitRef}
           style={{
             position: 'absolute',
             left: '12%',
-            top: '58%',
-            width: '160px',
-            height: '160px',
-            background: 'linear-gradient(135deg, #fff9b1 0%, #ffe066 100%)',
-            padding: '16px',
-            transform: 'rotate(-12deg)',
-            boxShadow: '0 6px 16px rgba(0,0,0,0.5)',
-            fontFamily: 'Permanent Marker, cursive',
-            fontSize: '14px',
+            top: '10%',
+            width: 260,
+            height: 190,
+            zIndex: 40,
+            transform: 'rotate(-8deg)'
+          }}
+          aria-label="Portrait photo"
+        >
+          {/* tape */}
+          <div className="tape" style={{ top: -10, left: 36, transform: 'rotate(-6deg)' }} />
+          <div className="tape" style={{ top: -14, right: 36, transform: 'rotate(8deg)' }} />
+          <div className="polaroid" style={{ width: '100%', height: '100%', overflow: 'hidden', borderRadius: 6 }}>
+            <img
+              src="/portrait.jpg"
+              alt="Portrait"
+              style={{
+                width: '100%',
+                height: '100%',
+                objectFit: 'cover',
+                filter: 'sepia(0.22) contrast(1.08)'
+              }}
+            />
+          </div>
+          <div className="pin" style={{ left: '34%', top: '30%' }} />
+        </div>
+
+        {/* Field Notes (document) */}
+        <div
+          ref={notesRef}
+          style={{
+            position: 'absolute',
+            right: '10%',
+            top: '14%',
+            width: 300,
+            padding: 18,
+            background: 'linear-gradient(135deg, #fbf7ef 0%, #efe1c7 100%)',
+            transform: 'rotate(4deg)',
+            fontFamily: 'Special Elite, monospace',
+            fontSize: 13,
+            lineHeight: 1.7,
             color: '#2a2a2a',
-            zIndex: hoveredItem === 'note1' ? 15 : 8
+            boxShadow: '0 12px 36px rgba(0,0,0,0.55)',
+            zIndex: 42,
+            border: '1px solid rgba(180,120,70,0.35)'
           }}
         >
-          <div style={{ 
-            fontSize: '16px', 
-            marginBottom: '8px',
-            textDecoration: 'underline'
+          <div style={{
+            borderBottom: '2px solid #8b4513',
+            marginBottom: 10,
+            paddingBottom: 8,
+            fontFamily: 'Permanent Marker, cursive',
+            fontSize: 18
           }}>
-            AEROSPACE
+            FIELD NOTES
           </div>
-          <div style={{ fontSize: '12px', lineHeight: '1.6' }}>
-            ✓ CFD simulations<br/>
-            ✓ Turbulence<br/>
-            ✓ Propeller dynamics<br/>
-            ✓ Thermal systems
+          <div style={{ fontWeight: 700 }}>Subject:</div> Chinmay Patil<br />
+          <div style={{ fontWeight: 700, marginTop: 8 }}>Location:</div> Previous Known Location<br />
+          <div style={{ fontWeight: 700, marginTop: 8 }}>Specialty:</div> CFD / Aeroacoustics / Visual tools
+          <div style={{ marginTop: 10, color: '#b71c1c', fontWeight: 700 }}>Key Skills:</div>
+          <ul style={{ marginTop: 6 }}>
+            <li>OpenFOAM & CFD pipelines</li>
+            <li>Python tooling / automation</li>
+            <li>Aeroacoustics analysis</li>
+          </ul>
+          <div className="pin" style={{ left: 8, top: -6 }} />
+        </div>
+
+        {/* Panoramic */}
+        <div
+          ref={panoramicRef}
+          style={{
+            position: 'absolute',
+            left: '34%',
+            top: '46%',
+            width: 460,
+            height: 150,
+            transform: 'rotate(3deg)',
+            zIndex: 45
+          }}
+        >
+          <div className="tape" style={{ top: -12, left: 96, transform: 'rotate(-2deg)' }} />
+          <div className="tape" style={{ top: -8, right: 84, transform: 'rotate(6deg)' }} />
+          <div className="polaroid" style={{ width: '100%', height: '100%', borderRadius: 6, overflow: 'hidden' }}>
+            <img
+              src="/Me2-3x8.jpg"
+              alt="Panoramic"
+              style={{ width: '100%', height: '100%', objectFit: 'cover', filter: 'sepia(0.15) contrast(1.04)' }}
+            />
+          </div>
+          <div className="pin" style={{ left: '16%', top: '20%' }} />
+        </div>
+
+        {/* Evidence tag */}
+        <div
+          ref={evidenceRef}
+          style={{
+            position: 'absolute',
+            left: '26%',
+            top: '70%',
+            padding: '14px 22px',
+            background: '#f6e4c1',
+            border: '2px solid #8b4513',
+            transform: 'rotate(-6deg)',
+            fontFamily: 'Special Elite, monospace',
+            fontSize: 13,
+            fontWeight: '700',
+            color: '#241b14',
+            boxShadow: '0 8px 26px rgba(0,0,0,0.6)',
+            zIndex: 50,
+            borderRadius: 6
+          }}
+        >
+          EVIDENCE #047
+          <div style={{ fontSize: 11, marginTop: 6, fontWeight: 400 }}>STATUS: ACTIVE INVESTIGATION</div>
+          <div className="pin" style={{ left: -10, top: -8 }} />
+        </div>
+
+        {/* Sticky notes */}
+        <div
+          style={{
+            position: 'absolute',
+            left: '10%',
+            top: '56%',
+            width: 160,
+            height: 160,
+            background: 'linear-gradient(135deg, #fff7b9 0%, #ffdf6b 100%)',
+            padding: 16,
+            transform: 'rotate(-13deg)',
+            boxShadow: '0 14px 40px rgba(0,0,0,0.45)',
+            fontFamily: 'Permanent Marker, cursive',
+            fontSize: 14,
+            color: '#211a14',
+            zIndex: 48,
+            borderRadius: 6
+          }}
+        >
+          <div style={{ fontSize: 16, marginBottom: 8, textDecoration: 'underline' }}>AEROSPACE</div>
+          <div style={{ fontSize: 12, lineHeight: 1.6 }}>
+            ✓ CFD simulations<br />
+            ✓ Turbulence modeling<br />
+            ✓ Propeller dynamics<br />
+            ✓ Thermal & systems
           </div>
         </div>
 
-        {/* Sticky Note 2 */}
-        <div 
-          className="photo-item"
-          onMouseEnter={() => setHoveredItem('note2')}
-          onMouseLeave={() => setHoveredItem(null)}
+        <div
           style={{
             position: 'absolute',
-            left: '72%',
-            top: '62%',
-            width: '150px',
-            height: '150px',
-            background: 'linear-gradient(135deg, #b8e6ff 0%, #6dc5ff 100%)',
-            padding: '16px',
-            transform: 'rotate(8deg)',
-            boxShadow: '0 6px 16px rgba(0,0,0,0.5)',
+            right: '12%',
+            top: '60%',
+            width: 150,
+            height: 150,
+            background: 'linear-gradient(135deg, #cfefff 0%, #7fc7ff 100%)',
+            padding: 14,
+            transform: 'rotate(6deg)',
+            boxShadow: '0 14px 40px rgba(0,0,0,0.45)',
             fontFamily: 'Permanent Marker, cursive',
-            fontSize: '13px',
-            color: '#1a1a1a',
-            zIndex: hoveredItem === 'note2' ? 15 : 9
+            fontSize: 13,
+            color: '#111111',
+            zIndex: 48,
+            borderRadius: 6
           }}
         >
-          <div style={{ 
-            fontSize: '15px', 
-            marginBottom: '8px',
-            textDecoration: 'underline'
-          }}>
-            CONTACT
-          </div>
-          <div style={{ fontSize: '11px', lineHeight: '1.5' }}>
-            chinmaypatil2412<br/>
-            @gmail.com<br/>
-            <br/>
+          <div style={{ fontSize: 15, marginBottom: 8, textDecoration: 'underline' }}>CONTACT</div>
+          <div style={{ fontSize: 12, lineHeight: 1.5 }}>
+            chinmaypatil2412<br />
+            @gmail.com<br />
+            <br />
             Munich, Germany
           </div>
         </div>
 
-        {/* Evidence Tag */}
-        <div 
-          className="photo-item burnt-edge"
-          style={{
-            position: 'absolute',
-            left: '28%',
-            top: '72%',
-            padding: '12px 20px',
-            background: '#f5deb3',
-            border: '2px solid #8b4513',
-            transform: 'rotate(-5deg)',
-            fontFamily: 'Special Elite, monospace',
-            fontSize: '12px',
-            fontWeight: 'bold',
-            color: '#2a2a2a',
-            boxShadow: '0 4px 12px rgba(0,0,0,0.6)',
-            zIndex: 10
-          }}
-        >
-          EVIDENCE #047
-          <div style={{ fontSize: '10px', marginTop: '4px', fontWeight: 'normal' }}>
-            STATUS: ACTIVE INVESTIGATION
-          </div>
-        </div>
-
-        {/* Magnifying Glass - using image asset */}
-        <img 
+        {/* propsed decorative props */}
+        <img
           src="/Assets/Magnifying Glass.png"
           alt="Magnifying glass"
           style={{
             position: 'absolute',
-            right: '8%',
-            bottom: '25%',
-            width: '200px',
-            height: '200px',
-            transform: 'rotate(0deg)',
-            filter: 'drop-shadow(0 8px 24px rgba(0,0,0,0.6))',
-            zIndex: 12,
-            pointerEvents: 'none'
+            right: '7%',
+            bottom: '14%',
+            width: 220,
+            height: 220,
+            filter: 'drop-shadow(0 8px 28px rgba(0,0,0,0.6))',
+            zIndex: 30,
+            pointerEvents: 'none',
+            transform: 'rotate(-8deg)'
           }}
         />
-
-        {/* Compass - using image asset */}
-        <img 
+        <img
           src="/Assets/Compass.png"
           alt="Compass"
           style={{
             position: 'absolute',
-            left: '5%',
-            bottom: '15%',
-            width: '150px',
-            height: '150px',
-            transform: 'rotate(-15deg)',
+            left: '6%',
+            bottom: '6%',
+            width: 150,
+            height: 150,
+            transform: 'rotate(-12deg)',
             filter: 'drop-shadow(0 6px 18px rgba(0,0,0,0.7))',
-            zIndex: 11,
+            zIndex: 30,
             pointerEvents: 'none'
           }}
         />
       </div>
 
-      {/* Look Around Button - Bottom of page */}
-      <div style={{
-        position: 'fixed',
-        bottom: '40px',
-        left: '50%',
-        transform: 'translateX(-50%)',
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        gap: '12px',
-        zIndex: 50,
-        cursor: 'pointer'
-      }}
-      onClick={handleLookAround}>
-        <div 
-          className="look-around-button"
-          style={{
-            fontFamily: 'Permanent Marker, cursive',
-            fontSize: '32px',
-            color: '#ff3b3b',
-            fontWeight: 'bold',
-            letterSpacing: '2px',
-            userSelect: 'none'
-          }}
+      {/* Look Around Button */}
+      <div style={{ position: 'absolute', bottom: 60, right: 78, zIndex: 160 }}>
+        <button
+          onClick={handleLookAround}
+          className="look-btn"
+          aria-label="Look around"
         >
-          Look Around
-        </div>
-        <div 
-          className="arrow-down"
-          style={{
-            fontSize: '40px',
-            color: '#ff3b3b',
-            textShadow: '0 0 15px rgba(255, 59, 59, 0.8)'
-          }}
-        >
-          ↓
-        </div>
+          LOOK AROUND
+        </button>
       </div>
     </div>
   )
