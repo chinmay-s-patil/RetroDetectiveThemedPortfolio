@@ -3,396 +3,426 @@
 import React, { useState } from 'react'
 
 export default function DetectiveLanding() {
-  const [hoveredHotspot, setHoveredHotspot] = useState(null)
-
-  const hotspots = [
-    { id: 'projects', x: 48, y: 28, icon: '📁', label: 'Projects' },
-    { id: 'cad', x: 28, y: 56, icon: '🖥️', label: 'CAD' },
-    { id: 'openfoam', x: 68, y: 62, icon: '📚', label: 'OpenFOAM' }
-  ]
+  const [hoveredItem, setHoveredItem] = useState(null)
 
   const handleLookAround = () => {
-    // Navigate to hub - for now just log
     console.log('Navigating to hub environment...')
-    // In actual implementation: router.push('/hub')
-  }
-
-  const handleHotspotClick = (id) => {
-    console.log(`Clicked: ${id}`)
-    // Future: Open drawer/modal for this category
   }
 
   return (
     <div style={{
       width: '100vw',
       height: '100vh',
-      background: 'linear-gradient(180deg, #e6d7c7 0%, #d7c0a6 100%)',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      padding: '2rem',
+      background: 'radial-gradient(circle at 40% 40%, #2a2318 0%, #12100c 60%, #000000 100%)',
+      position: 'relative',
+      overflow: 'hidden',
       fontFamily: 'system-ui, sans-serif'
     }}>
-      <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Kalam:wght@700&display=swap');
-        @import url('https://fonts.googleapis.com/css2?family=Manrope:wght@600;800&display=swap');
+      <style dangerouslySetInnerHTML={{__html: `
+        @import url('https://fonts.googleapis.com/css2?family=Special+Elite&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Permanent+Marker&display=swap');
 
-        .paper {
-          background: linear-gradient(180deg, #fbf7ef 0%, #f6efe1 100%);
-          box-shadow: 0 24px 50px rgba(6, 10, 15, 0.45);
-          border-radius: 10px;
-          border: 1px solid rgba(10, 10, 10, 0.05);
+        .tattered-paper {
+          filter: drop-shadow(0 8px 16px rgba(0,0,0,0.6));
+          clip-path: polygon(
+            2% 1%, 8% 0%, 15% 2%, 22% 0%, 30% 1%, 38% 0%, 
+            45% 2%, 52% 0%, 60% 1%, 68% 0%, 75% 2%, 82% 1%, 
+            90% 0%, 95% 1%, 98% 3%, 99% 8%, 100% 15%, 99% 22%,
+            100% 30%, 99% 38%, 100% 45%, 99% 52%, 100% 60%, 
+            99% 68%, 100% 75%, 98% 82%, 100% 88%, 99% 93%, 
+            97% 97%, 92% 99%, 85% 98%, 78% 100%, 70% 99%, 
+            62% 100%, 55% 98%, 48% 99%, 40% 100%, 32% 98%, 
+            25% 99%, 18% 100%, 10% 98%, 5% 96%, 2% 92%, 
+            0% 85%, 1% 78%, 0% 70%, 2% 62%, 0% 55%, 1% 48%, 
+            0% 40%, 2% 32%, 0% 25%, 1% 18%, 0% 10%, 2% 5%
+          );
         }
 
-        .tape {
-          width: 110px;
-          height: 28px;
-          background: linear-gradient(90deg, #fff3b0 0%, #ffe27a 100%);
-          box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
-          transform: rotate(-6deg);
-          border-radius: 3px;
-          opacity: 0.95;
+        .burnt-edge {
+          position: relative;
         }
 
-        .tape2 {
-          transform: rotate(8deg);
+        .burnt-edge::before {
+          content: '';
+          position: absolute;
+          inset: -5px;
+          background: linear-gradient(135deg, 
+            transparent 30%, 
+            rgba(40, 20, 0, 0.3) 40%, 
+            rgba(60, 30, 0, 0.5) 50%, 
+            rgba(30, 15, 0, 0.4) 60%,
+            transparent 70%
+          );
+          pointer-events: none;
+          z-index: 1;
         }
 
-        .sticky-note {
-          background: linear-gradient(180deg, #fff6b8 0%, #fff09d 100%);
-          width: 140px;
-          height: 120px;
-          padding: 12px;
-          box-shadow: 0 18px 40px rgba(0, 0, 0, 0.18);
-          border-radius: 6px;
-          font-family: 'Kalam', cursive;
+        .red-string {
+          position: absolute;
+          height: 2px;
+          background: #d32f2f;
+          transform-origin: left center;
+          box-shadow: 0 0 4px rgba(211, 47, 47, 0.6);
         }
 
-        .hotspot {
-          width: 64px;
-          height: 64px;
-          border-radius: 8px;
-          background: rgba(255, 255, 255, 0.03);
-          border: 2px solid rgba(255, 255, 255, 0.9);
-          display: grid;
-          place-items: center;
-          transition: transform 0.15s ease, box-shadow 0.15s ease;
+        .pin {
+          width: 12px;
+          height: 12px;
+          background: radial-gradient(circle, #c41e1e 40%, #8b0000 100%);
+          border-radius: 50%;
+          box-shadow: 0 2px 4px rgba(0,0,0,0.8), inset 0 -1px 2px rgba(0,0,0,0.5);
+          position: absolute;
+          z-index: 20;
+        }
+
+        .photo-item {
+          transition: transform 0.2s ease, filter 0.2s ease;
           cursor: pointer;
         }
 
-        .hotspot:hover {
-          transform: translateY(-6px) scale(1.03);
-          box-shadow: 0 12px 28px rgba(0, 0, 0, 0.25);
-          border-color: white;
+        .photo-item:hover {
+          transform: scale(1.05) !important;
+          filter: brightness(1.1);
+          z-index: 15 !important;
         }
 
-        .map-photo {
-          width: 260px;
-          height: 170px;
-          object-fit: cover;
-          border-radius: 6px;
-          box-shadow: 0 12px 30px rgba(0, 0, 0, 0.25);
-          border: 1px solid rgba(0, 0, 0, 0.06);
-        }
-
-        .look-around-btn {
-          padding: 16px 48px;
-          background: linear-gradient(135deg, #2c2c2c, #1a1a1a);
-          color: white;
-          border: none;
-          border-radius: 12px;
-          font-size: 18px;
-          font-weight: 700;
-          cursor: pointer;
-          box-shadow: 0 12px 32px rgba(0, 0, 0, 0.3);
-          transition: all 0.2s ease;
-          font-family: 'Manrope', sans-serif;
-          letter-spacing: 0.5px;
-        }
-
-        .look-around-btn:hover {
-          transform: translateY(-3px);
-          box-shadow: 0 16px 40px rgba(0, 0, 0, 0.4);
-          background: linear-gradient(135deg, #3a3a3a, #242424);
-        }
-
-        .arrow-down {
-          display: inline-block;
-          margin-left: 12px;
-          font-size: 20px;
-          animation: bounce 2s infinite;
-        }
-
-        @keyframes bounce {
-          0%, 20%, 50%, 80%, 100% {
+        @keyframes glow-pulse {
+          0%, 100% {
+            text-shadow: 
+              0 0 10px rgba(255, 255, 255, 0.8),
+              0 0 20px rgba(255, 255, 255, 0.6),
+              0 0 30px rgba(255, 59, 59, 0.8),
+              0 0 40px rgba(255, 59, 59, 0.6);
             transform: translateY(0);
           }
-          40% {
-            transform: translateY(-6px);
-          }
-          60% {
+          50% {
+            text-shadow: 
+              0 0 15px rgba(255, 255, 255, 1),
+              0 0 30px rgba(255, 255, 255, 0.8),
+              0 0 45px rgba(255, 59, 59, 1),
+              0 0 60px rgba(255, 59, 59, 0.8);
             transform: translateY(-3px);
           }
         }
-      `}</style>
 
-      <div className="paper" style={{
-        width: '1200px',
-        maxWidth: '95vw',
-        height: '760px',
-        maxHeight: '90vh',
-        padding: '2.5rem',
+        .look-around-button {
+          animation: glow-pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes arrow-bounce {
+          0%, 100% { transform: translateY(0); opacity: 1; }
+          50% { transform: translateY(8px); opacity: 0.7; }
+        }
+
+        .arrow-down {
+          animation: arrow-bounce 1.5s ease-in-out infinite;
+        }
+      `}} />
+
+      {/* Investigation Board */}
+      <div style={{
+        position: 'absolute',
+        inset: 0,
         display: 'flex',
-        gap: '2rem',
-        position: 'relative'
+        alignItems: 'center',
+        justifyContent: 'center',
+        padding: '3rem'
       }}>
         
-        {/* Main Map Area - Left/Center */}
-        <div style={{
-          flex: 1,
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'space-between'
-        }}>
-          {/* Map Canvas */}
-          <div style={{
-            position: 'relative',
-            background: 'url("/images/blank-map-texture.jpg") center/cover',
-            borderRadius: '8px',
-            flex: 1,
-            padding: '1.5rem',
-            overflow: 'hidden',
-            backgroundImage: 'repeating-linear-gradient(0deg, rgba(0,0,0,0.03) 0px, transparent 1px, transparent 40px, rgba(0,0,0,0.03) 41px), repeating-linear-gradient(90deg, rgba(0,0,0,0.03) 0px, transparent 1px, transparent 40px, rgba(0,0,0,0.03) 41px)',
-            backgroundColor: '#f5f0e8'
+        {/* Red String Connections - Updated positions */}
+        <div className="red-string" style={{
+          left: '15%',
+          top: '20%',
+          width: '320px',
+          transform: 'rotate(15deg)'
+        }} />
+        <div className="red-string" style={{
+          left: '48%',
+          top: '28%',
+          width: '220px',
+          transform: 'rotate(-20deg)'
+        }} />
+        <div className="red-string" style={{
+          left: '38%',
+          top: '55%',
+          width: '180px',
+          transform: 'rotate(35deg)'
+        }} />
+
+        {/* Pins - Updated positions to match strings */}
+        <div className="pin" style={{ left: '15%', top: '20%' }} />
+        <div className="pin" style={{ left: '48%', top: '28%' }} />
+        <div className="pin" style={{ left: '58%', top: '22%' }} />
+        <div className="pin" style={{ left: '38%', top: '55%' }} />
+        <div className="pin" style={{ left: '28%', top: '72%' }} />
+
+        {/* Portrait Photo 1 - Top Left */}
+        <div 
+          className="photo-item tattered-paper burnt-edge"
+          onMouseEnter={() => setHoveredItem('photo1')}
+          onMouseLeave={() => setHoveredItem(null)}
+          style={{
+            position: 'absolute',
+            left: '15%',
+            top: '12%',
+            width: '240px',
+            height: '180px',
+            transform: 'rotate(-8deg)',
+            zIndex: hoveredItem === 'photo1' ? 15 : 5
+          }}
+        >
+          <img 
+            src="/portrait.jpg" 
+            alt="Portrait" 
+            style={{
+              width: '100%',
+              height: '100%',
+              objectFit: 'cover',
+              border: '8px solid #f5f0e8',
+              boxShadow: '0 4px 12px rgba(0,0,0,0.6)',
+              filter: 'sepia(0.2) contrast(1.1)'
+            }}
+          />
+        </div>
+
+        {/* Wide Panoramic Photo - Center */}
+        <div 
+          className="photo-item tattered-paper burnt-edge"
+          onMouseEnter={() => setHoveredItem('photo2')}
+          onMouseLeave={() => setHoveredItem(null)}
+          style={{
+            position: 'absolute',
+            left: '35%',
+            top: '45%',
+            width: '420px',
+            height: '140px',
+            transform: 'rotate(3deg)',
+            zIndex: hoveredItem === 'photo2' ? 15 : 6
+          }}
+        >
+          <img 
+            src="/Me2-3x8.jpg" 
+            alt="Panoramic view" 
+            style={{
+              width: '100%',
+              height: '100%',
+              objectFit: 'cover',
+              border: '8px solid #f5f0e8',
+              boxShadow: '0 6px 16px rgba(0,0,0,0.7)',
+              filter: 'sepia(0.15) contrast(1.05)'
+            }}
+          />
+        </div>
+
+        {/* Document 1 - "Field Notes" */}
+        <div 
+          className="photo-item tattered-paper burnt-edge"
+          onMouseEnter={() => setHoveredItem('doc1')}
+          onMouseLeave={() => setHoveredItem(null)}
+          style={{
+            position: 'absolute',
+            left: '58%',
+            top: '18%',
+            width: '280px',
+            padding: '20px',
+            background: 'linear-gradient(135deg, #faf8f0 0%, #f0e8d8 100%)',
+            transform: 'rotate(5deg)',
+            fontFamily: 'Special Elite, monospace',
+            fontSize: '13px',
+            lineHeight: '1.8',
+            color: '#2a2a2a',
+            boxShadow: '0 8px 20px rgba(0,0,0,0.6)',
+            zIndex: hoveredItem === 'doc1' ? 15 : 7
+          }}
+        >
+          <div style={{ 
+            borderBottom: '2px solid #8b4513', 
+            marginBottom: '12px',
+            paddingBottom: '8px',
+            fontFamily: 'Permanent Marker, cursive',
+            fontSize: '16px'
           }}>
-            
-            {/* Taped Photo - Top Left */}
-            <div style={{
-              position: 'absolute',
-              left: '2.5rem',
-              top: '2rem'
-            }}>
-              <div style={{ position: 'relative' }}>
-                <img 
-                  src="/portrait.jpg" 
-                  alt="Field photo" 
-                  className="map-photo"
-                  style={{ transform: 'rotate(-2deg)' }}
-                />
-                <div className="tape" style={{
-                  position: 'absolute',
-                  top: '-12px',
-                  left: '20px'
-                }} />
-                <div className="tape tape2" style={{
-                  position: 'absolute',
-                  top: '-12px',
-                  right: '20px'
-                }} />
-              </div>
-              <div style={{
-                marginTop: '0.75rem',
-                fontSize: '14px',
-                color: '#2c2c2c',
-                fontFamily: 'Kalam, cursive',
-                fontWeight: 600
-              }}>
-                "field notes" — Munich lab
-              </div>
-            </div>
-
-            {/* Interactive Hotspots */}
-            {hotspots.map(spot => (
-              <button
-                key={spot.id}
-                className="hotspot"
-                onClick={() => handleHotspotClick(spot.id)}
-                onMouseEnter={() => setHoveredHotspot(spot.id)}
-                onMouseLeave={() => setHoveredHotspot(null)}
-                style={{
-                  position: 'absolute',
-                  left: `${spot.x}%`,
-                  top: `${spot.y}%`,
-                  fontSize: '28px',
-                  borderColor: hoveredHotspot === spot.id ? 'white' : 'rgba(255,255,255,0.9)'
-                }}
-                aria-label={`Open ${spot.label}`}
-                title={spot.label}
-              >
-                {spot.icon}
-              </button>
-            ))}
-
-            {/* Map Legend - Bottom Right */}
-            <div style={{
-              position: 'absolute',
-              right: '2rem',
-              bottom: '2rem',
-              width: '280px',
-              fontSize: '13px',
-              color: '#3a3a3a',
-              fontFamily: 'Manrope, sans-serif',
-              lineHeight: '1.6'
-            }}>
-              <div style={{ 
-                fontWeight: 800, 
-                fontSize: '16px',
-                marginBottom: '8px',
-                letterSpacing: '0.5px'
-              }}>
-                Key
-              </div>
-              <div>
-                • Projects (file drawer)<br />
-                • CAD (cartridge console)<br />
-                • OpenFOAM (bookshelf)
-              </div>
-            </div>
+            FIELD NOTES
           </div>
+          Subject: Chinmay Patil<br/>
+          Location: Previous Known Location<br/>
+          Specialty: CFD Engineering<br/>
+          <br/>
+          <span style={{ color: '#d32f2f' }}>Key Skills:</span><br/>
+          • OpenFOAM<br/>
+          • Python pipelines<br/>
+          • Aeroacoustics<br/>
+          • Visual tools
+        </div>
 
-          {/* Sticky Notes Row - Bottom */}
-          <div style={{
-            display: 'flex',
-            gap: '1rem',
-            marginTop: '1.5rem'
+        {/* Sticky Note 1 */}
+        <div 
+          className="photo-item"
+          onMouseEnter={() => setHoveredItem('note1')}
+          onMouseLeave={() => setHoveredItem(null)}
+          style={{
+            position: 'absolute',
+            left: '12%',
+            top: '58%',
+            width: '160px',
+            height: '160px',
+            background: 'linear-gradient(135deg, #fff9b1 0%, #ffe066 100%)',
+            padding: '16px',
+            transform: 'rotate(-12deg)',
+            boxShadow: '0 6px 16px rgba(0,0,0,0.5)',
+            fontFamily: 'Permanent Marker, cursive',
+            fontSize: '14px',
+            color: '#2a2a2a',
+            zIndex: hoveredItem === 'note1' ? 15 : 8
+          }}
+        >
+          <div style={{ 
+            fontSize: '16px', 
+            marginBottom: '8px',
+            textDecoration: 'underline'
           }}>
-            <div className="sticky-note" style={{ transform: 'rotate(-3deg)' }}>
-              <div style={{ fontSize: '14px', color: '#2c2c2c', fontWeight: 700 }}>
-                Aerospace · CFD
-              </div>
-              <div style={{ fontSize: '12px', marginTop: '10px', color: '#4a4a4a' }}>
-                - OpenFOAM case studies<br />
-                - Aeroacoustics
-              </div>
-            </div>
-
-            <div className="sticky-note" style={{ transform: 'rotate(-4deg)' }}>
-              <div style={{ fontSize: '14px', color: '#2c2c2c', fontWeight: 700 }}>
-                Tools
-              </div>
-              <div style={{ fontSize: '12px', marginTop: '10px', color: '#4a4a4a' }}>
-                - Python, ParaView<br />
-                - Blender, FEA
-              </div>
-            </div>
-
-            <div className="sticky-note" style={{ transform: 'rotate(6deg)' }}>
-              <div style={{ fontSize: '14px', color: '#2c2c2c', fontWeight: 700 }}>
-                Contact
-              </div>
-              <div style={{ fontSize: '12px', marginTop: '10px', color: '#4a4a4a' }}>
-                chinmaypatil2412@<br />gmail.com
-              </div>
-            </div>
+            AEROSPACE
+          </div>
+          <div style={{ fontSize: '12px', lineHeight: '1.6' }}>
+            ✓ CFD simulations<br/>
+            ✓ Turbulence<br/>
+            ✓ Propeller dynamics<br/>
+            ✓ Thermal systems
           </div>
         </div>
 
-        {/* Right Panel - Case Summary */}
-        <div style={{
-          width: '340px',
-          display: 'flex',
-          flexDirection: 'column',
-          gap: '1.5rem'
-        }}>
-          {/* Detective File Header */}
-          <div style={{
-            background: 'rgba(0, 0, 0, 0.06)',
-            padding: '1.25rem',
-            borderRadius: '10px'
+        {/* Sticky Note 2 */}
+        <div 
+          className="photo-item"
+          onMouseEnter={() => setHoveredItem('note2')}
+          onMouseLeave={() => setHoveredItem(null)}
+          style={{
+            position: 'absolute',
+            left: '72%',
+            top: '62%',
+            width: '150px',
+            height: '150px',
+            background: 'linear-gradient(135deg, #b8e6ff 0%, #6dc5ff 100%)',
+            padding: '16px',
+            transform: 'rotate(8deg)',
+            boxShadow: '0 6px 16px rgba(0,0,0,0.5)',
+            fontFamily: 'Permanent Marker, cursive',
+            fontSize: '13px',
+            color: '#1a1a1a',
+            zIndex: hoveredItem === 'note2' ? 15 : 9
+          }}
+        >
+          <div style={{ 
+            fontSize: '15px', 
+            marginBottom: '8px',
+            textDecoration: 'underline'
           }}>
-            <h3 style={{
-              fontSize: '20px',
-              fontWeight: 800,
-              marginBottom: '0.75rem',
-              fontFamily: 'Manrope, sans-serif',
-              letterSpacing: '0.5px'
-            }}>
-              Detective file — Chinmay
-            </h3>
-            <p style={{
-              fontSize: '14px',
-              lineHeight: '1.7',
-              color: '#3a3a3a',
-              fontFamily: 'Manrope, sans-serif'
-            }}>
-              CFD student who builds simulation pipelines, visual tools, and interactive models. 
-              Explore the archive — click anything with a white border.
-            </p>
+            CONTACT
           </div>
+          <div style={{ fontSize: '11px', lineHeight: '1.5' }}>
+            chinmaypatil2412<br/>
+            @gmail.com<br/>
+            <br/>
+            Munich, Germany
+          </div>
+        </div>
 
-          {/* Quick Info Cards */}
-          <div style={{
-            background: 'rgba(0, 0, 0, 0.04)',
-            padding: '1rem',
-            borderRadius: '10px',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '1rem'
-          }}>
-            <div style={{
-              width: '48px',
-              height: '48px',
-              background: 'rgba(0, 0, 0, 0.08)',
-              borderRadius: '8px',
-              display: 'grid',
-              placeItems: 'center',
-              fontSize: '24px'
-            }}>
-              🎓
-            </div>
-            <div>
-              <div style={{ fontSize: '14px', fontWeight: 700, fontFamily: 'Manrope, sans-serif' }}>
-                Education
-              </div>
-              <div style={{ fontSize: '12px', color: '#5a5a5a', fontFamily: 'Manrope, sans-serif' }}>
-                BTech, Aerospace Engineering
-              </div>
-            </div>
+        {/* Evidence Tag */}
+        <div 
+          className="photo-item burnt-edge"
+          style={{
+            position: 'absolute',
+            left: '28%',
+            top: '72%',
+            padding: '12px 20px',
+            background: '#f5deb3',
+            border: '2px solid #8b4513',
+            transform: 'rotate(-5deg)',
+            fontFamily: 'Special Elite, monospace',
+            fontSize: '12px',
+            fontWeight: 'bold',
+            color: '#2a2a2a',
+            boxShadow: '0 4px 12px rgba(0,0,0,0.6)',
+            zIndex: 10
+          }}
+        >
+          EVIDENCE #047
+          <div style={{ fontSize: '10px', marginTop: '4px', fontWeight: 'normal' }}>
+            STATUS: ACTIVE INVESTIGATION
           </div>
+        </div>
 
-          <div style={{
-            background: 'rgba(0, 0, 0, 0.04)',
-            padding: '1rem',
-            borderRadius: '10px',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '1rem'
-          }}>
-            <div style={{
-              width: '48px',
-              height: '48px',
-              background: 'rgba(0, 0, 0, 0.08)',
-              borderRadius: '8px',
-              display: 'grid',
-              placeItems: 'center',
-              fontSize: '24px'
-            }}>
-              🛠️
-            </div>
-            <div>
-              <div style={{ fontSize: '14px', fontWeight: 700, fontFamily: 'Manrope, sans-serif' }}>
-                Core
-              </div>
-              <div style={{ fontSize: '12px', color: '#5a5a5a', fontFamily: 'Manrope, sans-serif' }}>
-                CFD · Python · OpenFOAM
-              </div>
-            </div>
-          </div>
+        {/* Magnifying Glass - using image asset */}
+        <img 
+          src="/Assets/Magnifying Glass.png"
+          alt="Magnifying glass"
+          style={{
+            position: 'absolute',
+            right: '8%',
+            bottom: '25%',
+            width: '200px',
+            height: '200px',
+            transform: 'rotate(0deg)',
+            filter: 'drop-shadow(0 8px 24px rgba(0,0,0,0.6))',
+            zIndex: 12,
+            pointerEvents: 'none'
+          }}
+        />
 
-          {/* Call to Action */}
-          <div style={{
-            marginTop: 'auto',
-            display: 'flex',
-            justifyContent: 'center'
-          }}>
-            <button 
-              className="look-around-btn"
-              onClick={handleLookAround}
-            >
-              Look around
-              <span className="arrow-down">↓</span>
-            </button>
-          </div>
+        {/* Compass - using image asset */}
+        <img 
+          src="/Assets/Compass.png"
+          alt="Compass"
+          style={{
+            position: 'absolute',
+            left: '5%',
+            bottom: '15%',
+            width: '150px',
+            height: '150px',
+            transform: 'rotate(-15deg)',
+            filter: 'drop-shadow(0 6px 18px rgba(0,0,0,0.7))',
+            zIndex: 11,
+            pointerEvents: 'none'
+          }}
+        />
+      </div>
+
+      {/* Look Around Button - Bottom of page */}
+      <div style={{
+        position: 'fixed',
+        bottom: '40px',
+        left: '50%',
+        transform: 'translateX(-50%)',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        gap: '12px',
+        zIndex: 50,
+        cursor: 'pointer'
+      }}
+      onClick={handleLookAround}>
+        <div 
+          className="look-around-button"
+          style={{
+            fontFamily: 'Permanent Marker, cursive',
+            fontSize: '32px',
+            color: '#ff3b3b',
+            fontWeight: 'bold',
+            letterSpacing: '2px',
+            userSelect: 'none'
+          }}
+        >
+          Look Around
+        </div>
+        <div 
+          className="arrow-down"
+          style={{
+            fontSize: '40px',
+            color: '#ff3b3b',
+            textShadow: '0 0 15px rgba(255, 59, 59, 0.8)'
+          }}
+        >
+          ↓
         </div>
       </div>
     </div>
