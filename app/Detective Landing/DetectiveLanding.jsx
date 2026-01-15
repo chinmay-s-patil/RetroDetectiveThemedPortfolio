@@ -19,26 +19,33 @@ export default function DetectiveLanding() {
     console.log('Navigating to hub environment...')
   }
 
+  // Position tacks at actual element locations - MATCH THE CSS POSITIONS!
   const tacks = [
-    { id: 'notes', x: 67, y: 14 },
-    { id: 'education', x: 54, y: 8 },
-    { id: 'tools', x: 15, y: 28 },
-    { id: 'interests', x: 82, y: 32 },
-    { id: 'aerospace', x: 18, y: 56 },
-    { id: 'contact', x: 85, y: 60 },
-    { id: 'evidence', x: 34, y: 70 },
-    { id: 'status', x: 65, y: 88 }
+    { id: 'portrait', x: 17, y: 12 },           // left: 12%, top: 10%
+    { id: 'notes', x: 87, y: 14 },              // right: 10%, top: 14%
+    { id: 'education', x: 50, y: 8 },           // left: 46%, top: 8%
+    { id: 'tools', x: 8, y: 36 },               // left: 8%, top: 36%
+    { id: 'panoramic', x: 45, y: 36 },          // CENTER HUB - left: 34%, top: 36%
+    { id: 'interests', x: 80, y: 22 },          // right: 30%, top: 22%
+    { id: 'aerospace', x: 10, y: 58 },          // left: 10%, top: 56%
+    { id: 'contact', x: 87, y: 60 },            // right: 12%, top: 60%
+    { id: 'evidence', x: 22, y: 80 },           // left: 22%, top: 80%
+    { id: 'map', x: 45, y: 85 },                // left: 42%, bottom: 10% = top: 85%
+    { id: 'status', x: 82, y: 90 }              // right: 20%, bottom: 8% = top: 90%
   ]
 
+  // All connections radiate from the panoramic photo (center hub)
   const connections = [
-    { from: 'notes', to: 'education' },
-    { from: 'education', to: 'interests' },
-    { from: 'interests', to: 'contact' },
-    { from: 'tools', to: 'aerospace' },
-    { from: 'aerospace', to: 'evidence' },
-    { from: 'evidence', to: 'status' },
-    { from: 'notes', to: 'tools' },
-    { from: 'contact', to: 'status' }
+    { from: 'panoramic', to: 'portrait' },
+    { from: 'panoramic', to: 'notes' },
+    { from: 'panoramic', to: 'education' },
+    { from: 'panoramic', to: 'tools' },
+    { from: 'panoramic', to: 'interests' },
+    { from: 'panoramic', to: 'aerospace' },
+    { from: 'panoramic', to: 'contact' },
+    { from: 'panoramic', to: 'evidence' },
+    { from: 'panoramic', to: 'map' },
+    { from: 'panoramic', to: 'status' }
   ]
 
   return (
