@@ -27,25 +27,21 @@ export default function DetectiveLanding() {
     { id: 'tools', x: 8, y: 36 },               // left: 8%, top: 36%
     { id: 'panoramic', x: 45, y: 36 },          // CENTER HUB - left: 34%, top: 36%
     { id: 'interests', x: 80, y: 22 },          // right: 30%, top: 22%
-    { id: 'aerospace', x: 10, y: 58 },          // left: 10%, top: 56%
     { id: 'contact', x: 87, y: 60 },            // right: 12%, top: 60%
-    { id: 'evidence', x: 22, y: 80 },           // left: 22%, top: 80%
     { id: 'map', x: 45, y: 85 },                // left: 42%, bottom: 10% = top: 85%
     { id: 'status', x: 82, y: 90 }              // right: 20%, bottom: 8% = top: 90%
   ]
 
   // All connections radiate from the panoramic photo (center hub)
   const connections = [
-    { from: 'panoramic', to: 'portrait' },
-    { from: 'panoramic', to: 'notes' },
-    { from: 'panoramic', to: 'education' },
-    { from: 'panoramic', to: 'tools' },
-    { from: 'panoramic', to: 'interests' },
-    { from: 'panoramic', to: 'aerospace' },
-    { from: 'panoramic', to: 'contact' },
-    { from: 'panoramic', to: 'evidence' },
-    { from: 'panoramic', to: 'map' },
-    { from: 'panoramic', to: 'status' }
+    // { from: 'panoramic', to: 'portrait' },
+    // { from: 'panoramic', to: 'notes' },
+    // { from: 'panoramic', to: 'education' },
+    // { from: 'panoramic', to: 'tools' },
+    // { from: 'panoramic', to: 'interests' },
+    // { from: 'panoramic', to: 'contact' },
+    // { from: 'panoramic', to: 'map' },
+    // { from: 'panoramic', to: 'status' }
   ]
 
   return (
@@ -117,7 +113,7 @@ export default function DetectiveLanding() {
           width: 100%;
           height: 100%;
           pointer-events: none;
-          z-index: 6;
+          z-index: 999;
         }
 
         .red-string {
@@ -225,19 +221,19 @@ export default function DetectiveLanding() {
         /* Google Map */
         .map-container {
           position: absolute;
-          left: clamp(30%, 40vw, 42%);
-          bottom: clamp(8%, 10vh, 10%);
+          left: 50%;
+          bottom: 50%;
           width: clamp(280px, 40vw, 420px);
           height: clamp(180px, 28vw, 280px);
-          transform: rotate(-2deg);
+          transform: translate(-50%, -50%) rotate(-2deg);
           z-index: 35;
         }
 
         /* Field Notes */
         .field-notes {
           position: absolute;
-          right: clamp(5%, 10vw, 10%);
-          top: clamp(10%, 14vh, 14%);
+          right: clamp(-12%, 4vw, 10%);
+          top: clamp(10%, 10vh, 14%);
           width: clamp(200px, 30vw, 300px);
           padding: clamp(12px, 2vw, 18px);
           background: linear-gradient(135deg, #fbf7ef 0%, #efe1c7 100%);
@@ -260,38 +256,6 @@ export default function DetectiveLanding() {
           height: clamp(100px, 15vw, 150px);
           transform: rotate(3deg);
           z-index: 45;
-        }
-
-        /* Evidence Tag */
-        .evidence-tag {
-          position: absolute;
-          left: clamp(15%, 22vw, 22%);
-          top: clamp(72%, 80vh, 80%);
-          padding: clamp(10px, 2vw, 14px) clamp(16px, 3vw, 22px);
-          background: #f6e4c1;
-          border: 2px solid #8b4513;
-          transform: rotate(-6deg);
-          font-family: 'Special Elite', monospace;
-          font-size: clamp(11px, 1.5vw, 13px);
-          font-weight: 700;
-          color: #241b14;
-          box-shadow: 0 8px 26px rgba(0,0,0,0.6);
-          z-index: 50;
-          border-radius: 6px;
-        }
-
-        /* Sticky Notes */
-        .sticky-aerospace {
-          position: absolute;
-          left: clamp(5%, 10vw, 10%);
-          top: clamp(50%, 56vh, 56%);
-          width: clamp(120px, 20vw, 160px);
-          height: clamp(120px, 20vw, 160px);
-          background: linear-gradient(135deg, #fff7b9 0%, #ffdf6b 100%);
-          transform: rotate(-13deg);
-          font-size: clamp(11px, 1.5vw, 14px);
-          color: #211a14;
-          z-index: 48;
         }
 
         .sticky-contact {
@@ -361,8 +325,8 @@ export default function DetectiveLanding() {
 
         .button-container {
           position: absolute;
-          bottom: clamp(20px, 5vh, 40px);
-          right: clamp(30px, 5vw, 60px);
+          bottom: clamp(10px, 100vh, 10px);
+          right: clamp(50%, 5vw, 60px);
           z-index: 160;
         }
 
@@ -406,22 +370,6 @@ export default function DetectiveLanding() {
             left: 50%;
             transform: translateX(-50%) rotate(3deg);
             top: 30%;
-          }
-
-          .evidence-tag {
-            left: 10%;
-            top: auto;
-            bottom: 25%;
-            font-size: 10px;
-            padding: 8px 14px;
-          }
-
-          /* Stack sticky notes more vertically on mobile */
-          .sticky-aerospace {
-            width: 100px;
-            height: 100px;
-            left: 5%;
-            top: 48%;
           }
 
           .sticky-contact {
@@ -594,25 +542,6 @@ export default function DetectiveLanding() {
             <div className="polaroid" style={{ width: '100%', height: '100%' }}>
               <img src="/Me2-3x8.jpg" alt="Panoramic" style={{ width: '100%', height: '100%', objectFit: 'cover', filter: 'sepia(0.15) contrast(1.04)' }} />
             </div>
-          </div>
-
-          {/* Evidence Tag */}
-          <div className="evidence-tag">
-            EVIDENCE #047
-            <div style={{ fontSize: 11, marginTop: 6, fontWeight: 400 }}>STATUS: ACTIVE INVESTIGATION</div>
-            <div className="pin" style={{ left: '50%', top: -10, transform: 'translateX(-50%)' }} />
-          </div>
-
-          {/* Sticky Note 1 - Aerospace */}
-          <div className="sticky sticky-aerospace">
-            <div style={{ fontSize: 16, marginBottom: 8, textDecoration: 'underline' }}>AEROSPACE</div>
-            <div style={{ fontSize: 12, lineHeight: 1.6 }}>
-              ✓ CFD simulations<br />
-              ✓ Turbulence modeling<br />
-              ✓ Propeller dynamics<br />
-              ✓ Thermal & systems
-            </div>
-            <div className="pin" style={{ left: '50%', top: -8, transform: 'translateX(-50%)' }} />
           </div>
 
           {/* Sticky Note 2 - Contact */}
