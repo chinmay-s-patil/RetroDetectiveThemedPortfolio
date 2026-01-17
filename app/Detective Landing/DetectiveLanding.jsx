@@ -1,10 +1,12 @@
 'use client'
 
 import React, { useRef, useState, useEffect } from 'react'
+import { useRouter } from 'next/navigation'  // ADD THIS
 
 export default function DetectiveLanding() {
   const containerRef = useRef(null)
   const [isMobile, setIsMobile] = useState(false)
+  const router = useRouter()  // ADD THIS
 
   useEffect(() => {
     const checkMobile = () => {
@@ -16,7 +18,7 @@ export default function DetectiveLanding() {
   }, [])
 
   const handleLookAround = () => {
-    console.log('Navigating to hub environment...')
+    router.push('/hub')  // CHANGE THIS - Navigate to hub page
   }
 
   return (
@@ -341,10 +343,12 @@ export default function DetectiveLanding() {
         }
 
         .button-container {
-          position: absolute;
-          bottom: clamp(10px, 3vh, 20px);
-          right: clamp(50%, 5vw, 60px);
+          position: fixed;  /* Changed from absolute */
+          bottom: 30px;    /* OFF the page - hidden below */
+          left: 50%;
+          transform: translateX(-50%);
           z-index: 160;
+          transition: bottom 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         @media (max-width: 768px) {
@@ -609,13 +613,13 @@ export default function DetectiveLanding() {
       </div>
     </div>
 
-    {/* Look Around Button */}
-    <div className="button-container">
-      <button onClick={handleLookAround} className="look-btn" aria-label="Look around">
-        LOOK AROUND
-      </button>
+          {/* Look Around Button */}
+      <div className="button-container">
+        <button onClick={handleLookAround} className="look-btn" aria-label="Look around">
+          LOOK AROUND
+        </button>
+      </div>
     </div>
   </div>
-</div>
-)
+  )
 }
