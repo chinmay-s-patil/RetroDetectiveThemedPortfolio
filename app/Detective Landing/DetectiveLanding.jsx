@@ -118,7 +118,6 @@ export default function DetectiveLanding() {
           position: relative;
         }
 
-        /* Perforated top edge for sticky notes */
         .sticky-perforated::before {
           content: '';
           position: absolute;
@@ -136,7 +135,6 @@ export default function DetectiveLanding() {
           opacity: 0.3;
         }
 
-        /* Spiral binding holes on left */
         .sticky-spiral::before {
           content: '';
           position: absolute;
@@ -197,10 +195,9 @@ export default function DetectiveLanding() {
           box-shadow: 0 18px 40px rgba(0,0,0,0.5);
         }
 
-        /* Portrait Photo */
         .portrait-container {
           position: absolute;
-          left: clamp(5%, 10vw, 12%);
+          left: clamp(1%, 2vw, 5%);
           top: clamp(8%, 10vh, 10%);
           width: clamp(260px, 35vw, 380px);
           height: clamp(190px, 28vw, 280px);
@@ -208,22 +205,20 @@ export default function DetectiveLanding() {
           transform: rotate(-8deg);
         }
 
-        /* Google Map */
         .map-container {
           position: absolute;
           left: 52%;
           top: 42%;
-          width: clamp(400px, 45vw, 620px);
-          height: clamp(260px, 32vw, 420px);
+          width: clamp(400px, 45vw, 820px);
+          height: clamp(260px, 32vw, 620px);
           transform: translate(-50%, -50%) rotate(-2deg);
           z-index: 35;
         }
 
-        /* Field Notes - with torn edges */
         .field-notes {
           position: absolute;
-          left: clamp(5%, 8vw, 10%);
-          bottom: clamp(8%, 12vh, 15%);
+          left: clamp(4%, 4vw, 11%);
+          bottom: clamp(7%, 10vh, 11%);
           width: clamp(220px, 32vw, 320px);
           padding: clamp(14px, 2vw, 20px);
           background: linear-gradient(135deg, #fbf7ef 0%, #efe1c7 100%);
@@ -260,18 +255,16 @@ export default function DetectiveLanding() {
           );
         }
 
-        /* Panoramic Photo */
         .panoramic-container {
           position: absolute;
-          right: clamp(8%, 12vw, 15%);
-          top: clamp(18%, 22vh, 24%);
-          width: clamp(280px, 38vw, 420px);
-          height: clamp(90px, 13vw, 140px);
-          transform: rotate(4deg);
+          right: clamp(1%, 1vw, 5%);
+          top: clamp(4%, 2vh, 10%);
+          width: clamp(380px, 48vw, 580px);
+          height: clamp(130px, 18vw, 200px);
+          transform: rotate(3deg);
           z-index: 45;
         }
 
-        /* Handprint */
         .handprint-container {
           position: absolute;
           right: clamp(5%, 8vw, 12%);
@@ -279,15 +272,13 @@ export default function DetectiveLanding() {
           width: clamp(140px, 22vw, 200px);
           height: clamp(140px, 22vw, 200px);
           transform: rotate(-15deg);
-          opacity: 0.35;
           z-index: 33;
-          filter: sepia(0.4) contrast(1.2);
         }
 
         .sticky-contact {
           position: absolute;
-          right: clamp(5%, 10vw, 12%);
-          bottom: clamp(8%, 12vh, 15%);
+          right: clamp(5%, 22vw, 25%);
+          bottom: clamp(10%, 5vh, 25%);
           width: clamp(180px, 28vw, 250px);
           height: clamp(60px, 10vw, 75px);
           background: linear-gradient(135deg, #cfefff 0%, #7fc7ff 100%);
@@ -299,8 +290,8 @@ export default function DetectiveLanding() {
 
         .sticky-tools {
           position: absolute;
-          left: clamp(8%, 12vw, 16%);
-          top: clamp(48%, 52vh, 54%);
+          right: clamp(4%, 12vw, 8%);
+          top: clamp(28%, 42vh, 32%);
           width: clamp(110px, 19vw, 150px);
           height: clamp(110px, 19vw, 150px);
           background: linear-gradient(135deg, #ffcdd2 0%, #ef9a9a 100%);
@@ -313,7 +304,7 @@ export default function DetectiveLanding() {
         .sticky-interests {
           position: absolute;
           right: clamp(8%, 12vw, 14%);
-          top: clamp(6%, 10vh, 12%);
+          top: clamp(28%, 32vh, 35%);
           width: clamp(120px, 20vw, 160px);
           height: clamp(120px, 20vw, 160px);
           background: linear-gradient(135deg, #c8e6c9 0%, #81c784 100%);
@@ -338,8 +329,8 @@ export default function DetectiveLanding() {
 
         .sticky-status {
           position: absolute;
-          right: clamp(32%, 38vw, 42%);
-          bottom: clamp(10%, 14vh, 16%);
+          right: clamp(33%, 43vw, 47%);
+          bottom: clamp(10%, 7vh, 12%);
           width: clamp(110px, 18vw, 140px);
           height: clamp(95px, 15vw, 120px);
           background: linear-gradient(135deg, #ffe0b2 0%, #ffcc80 100%);
@@ -356,7 +347,6 @@ export default function DetectiveLanding() {
           z-index: 160;
         }
 
-        /* Mobile Adjustments */
         @media (max-width: 768px) {
           .detective-container {
             width: 98vw;
@@ -390,10 +380,10 @@ export default function DetectiveLanding() {
           }
 
           .panoramic-container {
-            width: 200px;
-            height: 70px;
+            width: 280px;
+            height: 100px;
             right: 5%;
-            top: 20%;
+            top: 8%;
           }
 
           .handprint-container {
@@ -421,7 +411,7 @@ export default function DetectiveLanding() {
             width: 95px;
             height: 95px;
             right: 5%;
-            top: 8%;
+            top: 30%;
           }
 
           .sticky-education {
@@ -523,16 +513,30 @@ export default function DetectiveLanding() {
             </div>
           </div>
 
-          {/* Handprint */}
+          {/* Handprint with frame */}
           <div className="handprint-container">
-            <svg viewBox="0 0 200 200" style={{ width: '100%', height: '100%' }}>
-              <path d="M100,180 Q95,175 90,165 L85,145 Q83,135 85,125 L90,105 Q92,95 95,90 L100,80 Q105,75 110,75 L115,80 Q118,85 118,95 L115,110 Q113,120 115,130 L120,145 Q125,155 125,165 Q120,175 115,180 Q110,182 105,180 Q102,178 100,180 Z" fill="#8b4513" opacity="0.6"/>
-              <ellipse cx="95" cy="70" rx="8" ry="25" transform="rotate(-15 95 70)" fill="#8b4513" opacity="0.6"/>
-              <ellipse cx="110" cy="65" rx="8" ry="28" transform="rotate(-5 110 65)" fill="#8b4513" opacity="0.6"/>
-              <ellipse cx="125" cy="70" rx="8" ry="26" transform="rotate(10 125 70)" fill="#8b4513" opacity="0.6"/>
-              <ellipse cx="138" cy="80" rx="7" ry="22" transform="rotate(20 138 80)" fill="#8b4513" opacity="0.6"/>
-              <ellipse cx="100" cy="120" rx="18" ry="35" transform="rotate(-10 100 120)" fill="#8b4513" opacity="0.5"/>
-            </svg>
+            <div style={{ 
+              width: '100%', 
+              height: '100%', 
+              border: '8px solid #3d2817',
+              borderRadius: '8px',
+              padding: '10px',
+              background: 'linear-gradient(135deg, #f6efe2 0%, #e8dcc8 100%)',
+              boxShadow: '0 12px 36px rgba(0,0,0,0.6), inset 0 0 20px rgba(0,0,0,0.08)',
+              position: 'relative'
+            }}>
+              <img 
+                src="./Assets/handPrint.png" 
+                alt="Handprint" 
+                style={{ 
+                  width: '100%', 
+                  height: '100%', 
+                  objectFit: 'contain',
+                  opacity: 0.7,
+                  filter: 'sepia(0.3) contrast(1.1)'
+                }} 
+              />
+            </div>
           </div>
 
           {/* Field Notes - Torn edges */}
@@ -552,10 +556,10 @@ export default function DetectiveLanding() {
             <div className="push-pin" style={{ left: '50%', top: -10, transform: 'translateX(-50%)' }} />
           </div>
 
-          {/* Panoramic Photo */}
+          {/* Panoramic Photo - Bigger and at top */}
           <div className="panoramic-container">
-            <div className="tape" style={{ top: -12, left: 60, transform: 'rotate(-2deg)', width: 70, height: 20 }} />
-            <div className="tape" style={{ top: -8, right: 50, transform: 'rotate(6deg)', width: 70, height: 20 }} />
+            <div className="tape" style={{ top: -12, left: 80, transform: 'rotate(-2deg)', width: 80, height: 22 }} />
+            <div className="tape" style={{ top: -8, right: 70, transform: 'rotate(6deg)', width: 80, height: 22 }} />
             <div className="polaroid" style={{ width: '100%', height: '100%' }}>
               <img src="/Me2-3x8.jpg" alt="Panoramic" style={{ width: '100%', height: '100%', objectFit: 'cover', filter: 'sepia(0.15) contrast(1.04)' }} />
             </div>
@@ -582,48 +586,36 @@ export default function DetectiveLanding() {
             <div className="push-pin" style={{ left: '50%', top: -9, transform: 'translateX(-50%)' }} />
           </div>
 
-          {/* Sticky Note - Interests (perforated top) */}
-          <div className="sticky sticky-interests sticky-perforated">
-            <div style={{ fontSize: 14, marginBottom: 6, textDecoration: 'underline' }}>INTERESTS</div>
-            <div style={{ fontSize: 11, lineHeight: 1.5 }}>
-              • Flow visualization<br />
-              • Automation<br />
-              • Web dev<br />
-              • Interactive tools
-            </div>
-            <div className="push-pin" style={{ left: '50%', top: -9, transform: 'translateX(-50%)' }} />
-          </div>
-
           {/* Sticky Note - Education (spiral binding) */}
-          <div className="sticky sticky-education sticky-spiral">
-            <div style={{ fontSize: 14, marginBottom: 6, textDecoration: 'underline' }}>EDUCATION</div>
-            <div style={{ fontSize: 11, lineHeight: 1.5 }}>
-              M.Sc. Aerospace<br />
-              Engineering<br />
-              TU Munich
-            </div>
-            <div className="push-pin" style={{ left: '50%', top: -9, transform: 'translateX(-50%)' }} />
-          </div>
-
-          {/* Sticky Note - Status (perforated top) */}
-          <div className="sticky sticky-status sticky-perforated">
-            <div style={{ fontSize: 13, marginBottom: 6, textDecoration: 'underline' }}>STATUS</div>  
-            <div style={{ fontSize: 10, lineHeight: 1.4 }}>
-              Currently seeking<br />
-              opportunities in<br />
-              CFD & simulation
-            </div>
-            <div className="push-pin" style={{ left: '50%', top: -9, transform: 'translateX(-50%)' }} />
-          </div>
+      <div className="sticky sticky-education sticky-spiral">
+        <div style={{ fontSize: 14, marginBottom: 6, textDecoration: 'underline' }}>EDUCATION</div>
+        <div style={{ fontSize: 11, lineHeight: 1.5 }}>
+          M.Sc. Aerospace<br />
+          Engineering<br />
+          TU Munich
         </div>
+        <div className="push-pin" style={{ left: '50%', top: -9, transform: 'translateX(-50%)' }} />
+      </div>
 
-        {/* Look Around Button */}
-        <div className="button-container">
-          <button onClick={handleLookAround} className="look-btn" aria-label="Look around">
-            LOOK AROUND
-          </button>
+      {/* Sticky Note - Status (perforated top) */}
+      <div className="sticky sticky-status sticky-perforated">
+        <div style={{ fontSize: 13, marginBottom: 6, textDecoration: 'underline' }}>STATUS</div>  
+        <div style={{ fontSize: 10, lineHeight: 1.4 }}>
+          Currently seeking<br />
+          opportunities in<br />
+          CFD & simulation
         </div>
+        <div className="push-pin" style={{ left: '50%', top: -9, transform: 'translateX(-50%)' }} />
       </div>
     </div>
-  )
+
+    {/* Look Around Button */}
+    <div className="button-container">
+      <button onClick={handleLookAround} className="look-btn" aria-label="Look around">
+        LOOK AROUND
+      </button>
+    </div>
+  </div>
+</div>
+)
 }
