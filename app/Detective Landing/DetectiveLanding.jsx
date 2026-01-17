@@ -19,31 +19,6 @@ export default function DetectiveLanding() {
     console.log('Navigating to hub environment...')
   }
 
-  // Position tacks at actual element locations - MATCH THE CSS POSITIONS!
-  const tacks = [
-    { id: 'portrait', x: 17, y: 12 },           // left: 12%, top: 10%
-    { id: 'notes', x: 87, y: 14 },              // right: 10%, top: 14%
-    { id: 'education', x: 50, y: 8 },           // left: 46%, top: 8%
-    { id: 'tools', x: 8, y: 36 },               // left: 8%, top: 36%
-    { id: 'panoramic', x: 45, y: 36 },          // CENTER HUB - left: 34%, top: 36%
-    { id: 'interests', x: 80, y: 22 },          // right: 30%, top: 22%
-    { id: 'contact', x: 87, y: 60 },            // right: 12%, top: 60%
-    { id: 'map', x: 45, y: 85 },                // left: 42%, bottom: 10% = top: 85%
-    { id: 'status', x: 82, y: 90 }              // right: 20%, bottom: 8% = top: 90%
-  ]
-
-  // All connections radiate from the panoramic photo (center hub)
-  const connections = [
-    // { from: 'panoramic', to: 'portrait' },
-    // { from: 'panoramic', to: 'notes' },
-    // { from: 'panoramic', to: 'education' },
-    // { from: 'panoramic', to: 'tools' },
-    // { from: 'panoramic', to: 'interests' },
-    // { from: 'panoramic', to: 'contact' },
-    // { from: 'panoramic', to: 'map' },
-    // { from: 'panoramic', to: 'status' }
-  ]
-
   return (
     <div className="detective-landing">
       <style dangerouslySetInnerHTML={{__html: `
@@ -107,29 +82,6 @@ export default function DetectiveLanding() {
           z-index: 5;
         }
 
-        .red-string-layer {
-          position: absolute;
-          inset: 0;
-          width: 100%;
-          height: 100%;
-          pointer-events: none;
-          z-index: 999;
-        }
-
-        .red-string {
-          stroke: #d32f2f;
-          stroke-width: 2.5;
-          fill: none;
-          filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));
-        }
-
-        .location-marker {
-          fill: #d32f2f;
-          stroke: #fff;
-          stroke-width: 2;
-          filter: drop-shadow(0 2px 4px rgba(0,0,0,0.6));
-        }
-
         .polaroid {
           border: 10px solid #f6efe2;
           box-shadow: 0 14px 40px rgba(0,0,0,0.6), inset 0 0 18px rgba(0,0,0,0.06);
@@ -163,29 +115,67 @@ export default function DetectiveLanding() {
           transition: transform 200ms;
           padding: clamp(10px, 2vw, 16px);
           font-family: 'Permanent Marker', cursive;
+          position: relative;
         }
 
-        .pin {
-          width: clamp(12px, 2vw, 16px);
-          height: clamp(12px, 2vw, 16px);
-          background: radial-gradient(circle at 35% 25%, #ffd700 0%, #c4a000 45%, #8b6914 100%);
+        /* Perforated top edge for sticky notes */
+        .sticky-perforated::before {
+          content: '';
+          position: absolute;
+          top: -4px;
+          left: 5%;
+          right: 5%;
+          height: 6px;
+          background: repeating-linear-gradient(
+            90deg,
+            currentColor 0px,
+            currentColor 2px,
+            transparent 2px,
+            transparent 8px
+          );
+          opacity: 0.3;
+        }
+
+        /* Spiral binding holes on left */
+        .sticky-spiral::before {
+          content: '';
+          position: absolute;
+          left: -3px;
+          top: 15%;
+          bottom: 15%;
+          width: 6px;
+          background: repeating-linear-gradient(
+            180deg,
+            currentColor 0px,
+            currentColor 3px,
+            transparent 3px,
+            transparent 12px
+          );
+          opacity: 0.3;
+          border-radius: 3px;
+        }
+
+        .push-pin {
+          width: clamp(14px, 2.2vw, 18px);
+          height: clamp(14px, 2.2vw, 18px);
+          background: radial-gradient(circle at 30% 30%, #ff6b6b 0%, #c92a2a 50%, #8b1a1a 100%);
           border-radius: 50%;
-          box-shadow: 0 4px 8px rgba(0,0,0,0.7), inset 0 -2px 3px rgba(0,0,0,0.4), inset 0 1px 2px rgba(255,255,255,0.3);
+          box-shadow: 0 5px 10px rgba(0,0,0,0.7), inset 0 -2px 4px rgba(0,0,0,0.5), inset 1px 2px 3px rgba(255,255,255,0.3);
           position: absolute;
           z-index: 60;
         }
 
-        .pin:after {
+        .push-pin:after {
           content: '';
           position: absolute;
           top: 50%;
           left: 50%;
           transform: translate(-50%, -50%);
-          width: 4px;
-          height: 4px;
-          background: radial-gradient(circle, #333, #000);
+          width: 5px;
+          height: 5px;
+          background: radial-gradient(circle, #1a1a1a, #000);
           border-radius: 50%;
-          box-shadow: 0 1px 2px rgba(255,255,255,0.4);
+          box-shadow: inset 0 1px 2px rgba(255,255,255,0.2);
         }
 
         .look-btn {
@@ -212,8 +202,8 @@ export default function DetectiveLanding() {
           position: absolute;
           left: clamp(5%, 10vw, 12%);
           top: clamp(8%, 10vh, 10%);
-          width: clamp(180px, 25vw, 260px);
-          height: clamp(130px, 20vw, 190px);
+          width: clamp(260px, 35vw, 380px);
+          height: clamp(190px, 28vw, 280px);
           z-index: 40;
           transform: rotate(-8deg);
         }
@@ -221,51 +211,87 @@ export default function DetectiveLanding() {
         /* Google Map */
         .map-container {
           position: absolute;
-          left: 50%;
-          bottom: 50%;
-          width: clamp(280px, 40vw, 420px);
-          height: clamp(180px, 28vw, 280px);
+          left: 52%;
+          top: 42%;
+          width: clamp(400px, 45vw, 620px);
+          height: clamp(260px, 32vw, 420px);
           transform: translate(-50%, -50%) rotate(-2deg);
           z-index: 35;
         }
 
-        /* Field Notes */
+        /* Field Notes - with torn edges */
         .field-notes {
           position: absolute;
-          right: clamp(-12%, 4vw, 10%);
-          top: clamp(10%, 10vh, 14%);
-          width: clamp(200px, 30vw, 300px);
-          padding: clamp(12px, 2vw, 18px);
+          left: clamp(5%, 8vw, 10%);
+          bottom: clamp(8%, 12vh, 15%);
+          width: clamp(220px, 32vw, 320px);
+          padding: clamp(14px, 2vw, 20px);
           background: linear-gradient(135deg, #fbf7ef 0%, #efe1c7 100%);
-          transform: rotate(4deg);
+          transform: rotate(-3deg);
           font-family: 'Special Elite', monospace;
           font-size: clamp(11px, 1.5vw, 13px);
           line-height: 1.7;
           color: #2a2a2a;
           box-shadow: 0 12px 36px rgba(0,0,0,0.55);
           z-index: 42;
-          border: 1px solid rgba(180,120,70,0.35);
+          clip-path: polygon(
+            0% 2%, 1% 0%, 2% 1.5%, 3% 0.5%, 4% 2%, 5% 0%, 6% 1%, 7% 0.5%, 8% 1.5%, 9% 0%, 
+            10% 2%, 11% 0.5%, 12% 1%, 13% 0%, 14% 1.5%, 15% 0.5%, 16% 2%, 17% 0%, 18% 1%, 
+            19% 0.5%, 20% 1.5%, 21% 0%, 22% 2%, 23% 0.5%, 24% 1%, 25% 0%, 26% 1.5%, 27% 0.5%, 
+            28% 2%, 29% 0%, 30% 1%, 31% 0.5%, 32% 1.5%, 33% 0%, 34% 2%, 35% 0.5%, 36% 1%, 
+            37% 0%, 38% 1.5%, 39% 0.5%, 40% 2%, 41% 0%, 42% 1%, 43% 0.5%, 44% 1.5%, 45% 0%, 
+            46% 2%, 47% 0.5%, 48% 1%, 49% 0%, 50% 1.5%, 51% 0.5%, 52% 2%, 53% 0%, 54% 1%, 
+            55% 0.5%, 56% 1.5%, 57% 0%, 58% 2%, 59% 0.5%, 60% 1%, 61% 0%, 62% 1.5%, 63% 0.5%, 
+            64% 2%, 65% 0%, 66% 1%, 67% 0.5%, 68% 1.5%, 69% 0%, 70% 2%, 71% 0.5%, 72% 1%, 
+            73% 0%, 74% 1.5%, 75% 0.5%, 76% 2%, 77% 0%, 78% 1%, 79% 0.5%, 80% 1.5%, 81% 0%, 
+            82% 2%, 83% 0.5%, 84% 1%, 85% 0%, 86% 1.5%, 87% 0.5%, 88% 2%, 89% 0%, 90% 1%, 
+            91% 0.5%, 92% 1.5%, 93% 0%, 94% 2%, 95% 0.5%, 96% 1%, 97% 0%, 98% 1.5%, 99% 0.5%, 100% 2%,
+            100% 98%, 99% 100%, 98% 98.5%, 97% 99.5%, 96% 98%, 95% 100%, 94% 99%, 93% 99.5%, 92% 98.5%, 91% 100%, 
+            90% 98%, 89% 99.5%, 88% 99%, 87% 100%, 86% 98.5%, 85% 99.5%, 84% 98%, 83% 100%, 82% 99%, 
+            81% 99.5%, 80% 98.5%, 79% 100%, 78% 98%, 77% 99.5%, 76% 99%, 75% 100%, 74% 98.5%, 73% 99.5%, 
+            72% 98%, 71% 100%, 70% 99%, 69% 99.5%, 68% 98.5%, 67% 100%, 66% 98%, 65% 99.5%, 64% 99%, 
+            63% 100%, 62% 98.5%, 61% 99.5%, 60% 98%, 59% 100%, 58% 99%, 57% 99.5%, 56% 98.5%, 55% 100%, 
+            54% 98%, 53% 99.5%, 52% 99%, 51% 100%, 50% 98.5%, 49% 99.5%, 48% 98%, 47% 100%, 46% 99%, 
+            45% 99.5%, 44% 98.5%, 43% 100%, 42% 98%, 41% 99.5%, 40% 99%, 39% 100%, 38% 98.5%, 37% 99.5%, 
+            36% 98%, 35% 100%, 34% 99%, 33% 99.5%, 32% 98.5%, 31% 100%, 30% 98%, 29% 99.5%, 28% 99%, 
+            27% 100%, 26% 98.5%, 25% 99.5%, 24% 98%, 23% 100%, 22% 99%, 21% 99.5%, 20% 98.5%, 19% 100%, 
+            18% 98%, 17% 99.5%, 16% 99%, 15% 100%, 14% 98.5%, 13% 99.5%, 12% 98%, 11% 100%, 10% 99%, 
+            9% 99.5%, 8% 98.5%, 7% 100%, 6% 98%, 5% 99.5%, 4% 99%, 3% 100%, 2% 98.5%, 1% 99.5%, 0% 98%
+          );
         }
 
         /* Panoramic Photo */
         .panoramic-container {
           position: absolute;
-          left: clamp(28%, 34vw, 34%);
-          top: clamp(32%, 36vh, 36%);
-          width: clamp(320px, 45vw, 460px);
-          height: clamp(100px, 15vw, 150px);
-          transform: rotate(3deg);
+          right: clamp(8%, 12vw, 15%);
+          top: clamp(18%, 22vh, 24%);
+          width: clamp(280px, 38vw, 420px);
+          height: clamp(90px, 13vw, 140px);
+          transform: rotate(4deg);
           z-index: 45;
+        }
+
+        /* Handprint */
+        .handprint-container {
+          position: absolute;
+          right: clamp(5%, 8vw, 12%);
+          bottom: clamp(15%, 20vh, 22%);
+          width: clamp(140px, 22vw, 200px);
+          height: clamp(140px, 22vw, 200px);
+          transform: rotate(-15deg);
+          opacity: 0.35;
+          z-index: 33;
+          filter: sepia(0.4) contrast(1.2);
         }
 
         .sticky-contact {
           position: absolute;
-          right: clamp(5%, 12vw, 12%);
-          top: clamp(54%, 60vh, 60%);
+          right: clamp(5%, 10vw, 12%);
+          bottom: clamp(8%, 12vh, 15%);
           width: clamp(180px, 28vw, 250px);
           height: clamp(60px, 10vw, 75px);
           background: linear-gradient(135deg, #cfefff 0%, #7fc7ff 100%);
-          transform: rotate(6deg);
+          transform: rotate(3deg);
           font-size: clamp(11px, 1.5vw, 13px);
           color: #111111;
           z-index: 48;
@@ -273,12 +299,12 @@ export default function DetectiveLanding() {
 
         .sticky-tools {
           position: absolute;
-          left: clamp(4%, 8vw, 8%);
-          top: clamp(32%, 36vh, 36%);
-          width: clamp(100px, 18vw, 140px);
-          height: clamp(100px, 18vw, 140px);
+          left: clamp(8%, 12vw, 16%);
+          top: clamp(48%, 52vh, 54%);
+          width: clamp(110px, 19vw, 150px);
+          height: clamp(110px, 19vw, 150px);
           background: linear-gradient(135deg, #ffcdd2 0%, #ef9a9a 100%);
-          transform: rotate(8deg);
+          transform: rotate(-8deg);
           font-size: clamp(10px, 1.4vw, 12px);
           color: #1a1a1a;
           z-index: 48;
@@ -286,12 +312,12 @@ export default function DetectiveLanding() {
 
         .sticky-interests {
           position: absolute;
-          right: clamp(25%, 30vw, 30%);
-          top: clamp(18%, 22vh, 22%);
-          width: clamp(110px, 18vw, 145px);
-          height: clamp(110px, 18vw, 145px);
+          right: clamp(8%, 12vw, 14%);
+          top: clamp(6%, 10vh, 12%);
+          width: clamp(120px, 20vw, 160px);
+          height: clamp(120px, 20vw, 160px);
           background: linear-gradient(135deg, #c8e6c9 0%, #81c784 100%);
-          transform: rotate(-10deg);
+          transform: rotate(7deg);
           font-size: clamp(10px, 1.4vw, 12px);
           color: #1a1a1a;
           z-index: 48;
@@ -299,12 +325,12 @@ export default function DetectiveLanding() {
 
         .sticky-education {
           position: absolute;
-          left: clamp(40%, 46vw, 46%);
-          top: clamp(6%, 8vh, 8%);
-          width: clamp(120px, 20vw, 155px);
-          height: clamp(90px, 15vw, 120px);
+          left: clamp(38%, 44vw, 46%);
+          top: clamp(6%, 10vh, 12%);
+          width: clamp(130px, 22vw, 170px);
+          height: clamp(100px, 16vw, 130px);
           background: linear-gradient(135deg, #f8bbd0 0%, #f48fb1 100%);
-          transform: rotate(3deg);
+          transform: rotate(-5deg);
           font-size: clamp(10px, 1.4vw, 12px);
           color: #1a1a1a;
           z-index: 48;
@@ -312,12 +338,12 @@ export default function DetectiveLanding() {
 
         .sticky-status {
           position: absolute;
-          right: clamp(15%, 20vw, 20%);
-          bottom: clamp(6%, 8vh, 8%);
-          width: clamp(100px, 16vw, 130px);
-          height: clamp(85px, 14vw, 110px);
+          right: clamp(32%, 38vw, 42%);
+          bottom: clamp(10%, 14vh, 16%);
+          width: clamp(110px, 18vw, 140px);
+          height: clamp(95px, 15vw, 120px);
           background: linear-gradient(135deg, #ffe0b2 0%, #ffcc80 100%);
-          transform: rotate(-7deg);
+          transform: rotate(6deg);
           font-size: clamp(9px, 1.3vw, 11px);
           color: #1a1a1a;
           z-index: 48;
@@ -325,7 +351,7 @@ export default function DetectiveLanding() {
 
         .button-container {
           position: absolute;
-          bottom: clamp(10px, 100vh, 10px);
+          bottom: clamp(10px, 3vh, 20px);
           right: clamp(50%, 5vw, 60px);
           z-index: 160;
         }
@@ -342,80 +368,79 @@ export default function DetectiveLanding() {
           }
 
           .portrait-container {
-            width: 140px;
-            height: 100px;
+            width: 160px;
+            height: 120px;
             left: 5%;
             top: 5%;
           }
 
           .map-container {
-            width: 200px;
-            height: 130px;
+            width: 240px;
+            height: 160px;
             left: 50%;
-            transform: translateX(-50%) rotate(-2deg);
-            bottom: 10%;
+            top: 45%;
           }
 
           .field-notes {
             width: 180px;
-            right: 5%;
-            top: 8%;
+            left: 5%;
+            bottom: 10%;
             font-size: 10px;
-            padding: 10px;
+            padding: 12px;
           }
 
           .panoramic-container {
-            width: 250px;
-            height: 80px;
-            left: 50%;
-            transform: translateX(-50%) rotate(3deg);
-            top: 30%;
+            width: 200px;
+            height: 70px;
+            right: 5%;
+            top: 20%;
+          }
+
+          .handprint-container {
+            width: 100px;
+            height: 100px;
+            right: 5%;
+            bottom: 18%;
           }
 
           .sticky-contact {
             width: 140px;
             height: 55px;
             right: 5%;
-            top: 52%;
+            bottom: 12%;
           }
 
           .sticky-tools {
             width: 85px;
             height: 85px;
-            left: 5%;
-            top: 32%;
+            left: 8%;
+            top: 50%;
           }
 
           .sticky-interests {
             width: 95px;
             height: 95px;
             right: 5%;
-            top: 18%;
+            top: 8%;
           }
 
           .sticky-education {
             width: 110px;
             height: 85px;
-            left: 50%;
-            transform: translateX(-50%) rotate(3deg);
-            top: 5%;
+            left: 42%;
+            top: 8%;
           }
 
           .sticky-status {
             width: 90px;
             height: 75px;
-            right: 5%;
+            right: 35%;
             bottom: 12%;
           }
 
           .button-container {
             bottom: 15px;
             right: 15px;
-          }
-
-          /* Hide red strings on mobile for cleaner look */
-          .red-string-layer {
-            display: none;
           }
         }
 
@@ -468,26 +493,6 @@ export default function DetectiveLanding() {
         <div className="cork-board">
           <div className="vignette" />
 
-          {/* Red string connections */}
-          <svg className="red-string-layer">
-            {connections.map((conn, idx) => {
-              const from = tacks.find(t => t.id === conn.from)
-              const to = tacks.find(t => t.id === conn.to)
-              if (!from || !to) return null
-              
-              return (
-                <line
-                  key={idx}
-                  x1={`${from.x}%`}
-                  y1={`${from.y}%`}
-                  x2={`${to.x}%`}
-                  y2={`${to.y}%`}
-                  className="red-string"
-                />
-              )
-            })}
-          </svg>
-
           {/* Google Map */}
           <div className="map-container">
             <div className="tape" style={{ top: -8, left: -8, transform: 'rotate(-45deg)', width: 50, height: 18 }} />
@@ -499,12 +504,12 @@ export default function DetectiveLanding() {
               <img src="/Assets/GMap.png" alt="Munich Map" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
               
               <svg style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', pointerEvents: 'none' }}>
-                <circle cx="55%" cy="18%" r="6" className="location-marker"/>
-                <circle cx="48%" cy="52%" r="6" className="location-marker"/>
-                <circle cx="65%" cy="72%" r="6" className="location-marker"/>
-                <circle cx="72%" cy="55%" r="6" className="location-marker"/>
-                <circle cx="32%" cy="65%" r="6" className="location-marker"/>
-                <circle cx="72%" cy="85%" r="6" className="location-marker"/>
+                <circle cx="55%" cy="18%" r="6" fill="#d32f2f" stroke="#fff" strokeWidth="2"/>
+                <circle cx="48%" cy="52%" r="6" fill="#d32f2f" stroke="#fff" strokeWidth="2"/>
+                <circle cx="65%" cy="72%" r="6" fill="#d32f2f" stroke="#fff" strokeWidth="2"/>
+                <circle cx="72%" cy="55%" r="6" fill="#d32f2f" stroke="#fff" strokeWidth="2"/>
+                <circle cx="32%" cy="65%" r="6" fill="#d32f2f" stroke="#fff" strokeWidth="2"/>
+                <circle cx="72%" cy="85%" r="6" fill="#d32f2f" stroke="#fff" strokeWidth="2"/>
               </svg>
             </div>
           </div>
@@ -518,7 +523,19 @@ export default function DetectiveLanding() {
             </div>
           </div>
 
-          {/* Field Notes */}
+          {/* Handprint */}
+          <div className="handprint-container">
+            <svg viewBox="0 0 200 200" style={{ width: '100%', height: '100%' }}>
+              <path d="M100,180 Q95,175 90,165 L85,145 Q83,135 85,125 L90,105 Q92,95 95,90 L100,80 Q105,75 110,75 L115,80 Q118,85 118,95 L115,110 Q113,120 115,130 L120,145 Q125,155 125,165 Q120,175 115,180 Q110,182 105,180 Q102,178 100,180 Z" fill="#8b4513" opacity="0.6"/>
+              <ellipse cx="95" cy="70" rx="8" ry="25" transform="rotate(-15 95 70)" fill="#8b4513" opacity="0.6"/>
+              <ellipse cx="110" cy="65" rx="8" ry="28" transform="rotate(-5 110 65)" fill="#8b4513" opacity="0.6"/>
+              <ellipse cx="125" cy="70" rx="8" ry="26" transform="rotate(10 125 70)" fill="#8b4513" opacity="0.6"/>
+              <ellipse cx="138" cy="80" rx="7" ry="22" transform="rotate(20 138 80)" fill="#8b4513" opacity="0.6"/>
+              <ellipse cx="100" cy="120" rx="18" ry="35" transform="rotate(-10 100 120)" fill="#8b4513" opacity="0.5"/>
+            </svg>
+          </div>
+
+          {/* Field Notes - Torn edges */}
           <div className="field-notes">
             <div style={{ borderBottom: '2px solid #8b4513', marginBottom: 10, paddingBottom: 8, fontFamily: 'Permanent Marker, cursive', fontSize: 18 }}>
               FIELD NOTES
@@ -532,29 +549,29 @@ export default function DetectiveLanding() {
               <li>Python tooling / automation</li>
               <li>Aeroacoustics analysis</li>
             </ul>
-            <div className="pin" style={{ left: '50%', top: -12, transform: 'translateX(-50%)' }} />
+            <div className="push-pin" style={{ left: '50%', top: -10, transform: 'translateX(-50%)' }} />
           </div>
 
           {/* Panoramic Photo */}
           <div className="panoramic-container">
-            <div className="tape" style={{ top: -12, left: 96, transform: 'rotate(-2deg)', width: 70, height: 20 }} />
-            <div className="tape" style={{ top: -8, right: 84, transform: 'rotate(6deg)', width: 70, height: 20 }} />
+            <div className="tape" style={{ top: -12, left: 60, transform: 'rotate(-2deg)', width: 70, height: 20 }} />
+            <div className="tape" style={{ top: -8, right: 50, transform: 'rotate(6deg)', width: 70, height: 20 }} />
             <div className="polaroid" style={{ width: '100%', height: '100%' }}>
               <img src="/Me2-3x8.jpg" alt="Panoramic" style={{ width: '100%', height: '100%', objectFit: 'cover', filter: 'sepia(0.15) contrast(1.04)' }} />
             </div>
           </div>
 
-          {/* Sticky Note 2 - Contact */}
-          <div className="sticky sticky-contact">
+          {/* Sticky Note - Contact (perforated top) */}
+          <div className="sticky sticky-contact sticky-perforated">
             <div style={{ fontSize: 15, marginBottom: 8, textDecoration: 'underline' }}>CONTACT</div>
             <div style={{ fontSize: 12, lineHeight: 1.5 }}>
               patil.chinmay3031@gmail.com
             </div>
-            <div className="pin" style={{ left: '50%', top: -8, transform: 'translateX(-50%)' }} />
+            <div className="push-pin" style={{ left: '50%', top: -9, transform: 'translateX(-50%)' }} />
           </div>
 
-          {/* Sticky Note 3 - Tools */}
-          <div className="sticky sticky-tools">
+          {/* Sticky Note - Tools (spiral binding) */}
+          <div className="sticky sticky-tools sticky-spiral">
             <div style={{ fontSize: 14, marginBottom: 6, textDecoration: 'underline' }}>TOOLS</div>
             <div style={{ fontSize: 11, lineHeight: 1.5 }}>
               • OpenFOAM<br />
@@ -562,11 +579,11 @@ export default function DetectiveLanding() {
               • Python<br />
               • Git
             </div>
-            <div className="pin" style={{ left: '50%', top: -8, transform: 'translateX(-50%)' }} />
+            <div className="push-pin" style={{ left: '50%', top: -9, transform: 'translateX(-50%)' }} />
           </div>
 
-          {/* Sticky Note 4 - Interests */}
-          <div className="sticky sticky-interests">
+          {/* Sticky Note - Interests (perforated top) */}
+          <div className="sticky sticky-interests sticky-perforated">
             <div style={{ fontSize: 14, marginBottom: 6, textDecoration: 'underline' }}>INTERESTS</div>
             <div style={{ fontSize: 11, lineHeight: 1.5 }}>
               • Flow visualization<br />
@@ -574,29 +591,29 @@ export default function DetectiveLanding() {
               • Web dev<br />
               • Interactive tools
             </div>
-            <div className="pin" style={{ left: '50%', top: -8, transform: 'translateX(-50%)' }} />
+            <div className="push-pin" style={{ left: '50%', top: -9, transform: 'translateX(-50%)' }} />
           </div>
 
-          {/* Sticky Note 5 - Education */}
-          <div className="sticky sticky-education">
+          {/* Sticky Note - Education (spiral binding) */}
+          <div className="sticky sticky-education sticky-spiral">
             <div style={{ fontSize: 14, marginBottom: 6, textDecoration: 'underline' }}>EDUCATION</div>
             <div style={{ fontSize: 11, lineHeight: 1.5 }}>
               M.Sc. Aerospace<br />
               Engineering<br />
               TU Munich
             </div>
-            <div className="pin" style={{ left: '50%', top: -8, transform: 'translateX(-50%)' }} />
+            <div className="push-pin" style={{ left: '50%', top: -9, transform: 'translateX(-50%)' }} />
           </div>
 
-          {/* Sticky Note 6 - Status */}
-          <div className="sticky sticky-status">
+          {/* Sticky Note - Status (perforated top) */}
+          <div className="sticky sticky-status sticky-perforated">
             <div style={{ fontSize: 13, marginBottom: 6, textDecoration: 'underline' }}>STATUS</div>  
             <div style={{ fontSize: 10, lineHeight: 1.4 }}>
               Currently seeking<br />
               opportunities in<br />
               CFD & simulation
             </div>
-            <div className="pin" style={{ left: '50%', top: -8, transform: 'translateX(-50%)' }} />
+            <div className="push-pin" style={{ left: '50%', top: -9, transform: 'translateX(-50%)' }} />
           </div>
         </div>
 
