@@ -5,12 +5,16 @@
     "env": {
       "NEXT_TELEMETRY_DISABLED": "1",
       "NODE_ENV": "production",
-      "NODE_OPTIONS": "--max-old-space-size=3584"
+      "NODE_OPTIONS": "--max-old-space-size=4096 --optimize-for-size --max-old-space-size=4096 --gc-interval=100",
+      "DISABLE_ESLINT_PLUGIN": "true",
+      "SKIP_ENV_VALIDATION": "true"
     }
   },
   "functions": {
     "app/**/*.{js,ts,jsx,tsx}": {
-      "maxDuration": 10
+      "maxDuration": 10,
+      "memory": 1024
     }
-  }
+  },
+  "outputDirectory": ".next"
 }

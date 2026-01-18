@@ -2,45 +2,50 @@
 const nextConfig = {
   reactStrictMode: true,
   
-  // CRITICAL: Disable memory-intensive features
+  // CRITICAL: Disable all memory-intensive features
   images: {
-    unoptimized: true, // Skip image optimization entirely
+    unoptimized: true, // Skip image optimization
+    loader: 'default',
+    dangerouslyAllowSVG: true,
   },
   
-  // Reduce build output size
+  // Force standalone output to reduce bundle size
   output: 'standalone',
   
-  // Disable source maps in production to save memory
+  // Disable source maps completely
   productionBrowserSourceMaps: false,
   
-  // Optimize webpack for memory
+  // Disable SWC minify (uses less memory but larger bundle)
+  swcMinify: false,
+  
+  // Aggressive webpack optimization for memory
   webpack: (config, { dev, isServer }) => {
-    // Disable source maps completely during build
+    // Disable source maps in production
     if (!dev) {
       config.devtool = false;
     }
     
-    // Reduce memory usage
+    // Reduce memory consumption
     config.optimization = {
       ...config.optimization,
-      // Disable minimization during build to save memory
-      // Note: This will increase bundle size but prevent OOM
-      minimize: false,
+      minimize: false, // Disable minification to save memory during build
       
-      // Aggressive chunk splitting
+      // Split chunks more aggressively
       splitChunks: {
         chunks: 'all',
         cacheGroups: {
           default: false,
           vendors: false,
-          // Vendor chunk
+          
+          // Separate vendor chunk
           vendor: {
             name: 'vendor',
             chunks: 'all',
             test: /node_modules/,
             priority: 20
           },
-          // Common chunk
+          
+          // Common chunk for shared code
           common: {
             name: 'common',
             minChunks: 2,
@@ -49,28 +54,23 @@ const nextConfig = {
             reuseExistingChunk: true,
             enforce: true
           }
-        }
+        },
+        maxInitialRequests: 25,
+        minSize: 20000
       }
     };
     
-    // Disable parallelism to reduce memory
+    // Disable parallelism completely
     config.parallelism = 1;
     
-    // Reduce terser parallelism
-    if (!isServer) {
-      const TerserPlugin = config.optimization.minimizer?.find(
-        plugin => plugin.constructor.name === 'TerserPlugin'
-      );
-      if (TerserPlugin) {
-        TerserPlugin.options.parallel = false;
-      }
-    }
+    // Reduce cache
+    config.cache = false;
     
     // Limit memory usage
     config.performance = {
-      ...config.performance,
       maxAssetSize: 10000000, // 10MB
       maxEntrypointSize: 10000000,
+      hints: false
     };
     
     return config;
@@ -78,19 +78,39 @@ const nextConfig = {
   
   // Experimental optimizations
   experimental: {
-    // Disable worker threads
     workerThreads: false,
     cpus: 1,
+    // Disable optimization that uses memory
+    optimizeCss: false,
+    optimizePackageImports: ['lucide-react'], // Only optimize specific packages
   },
   
   // Compiler optimizations
   compiler: {
-    // Remove console logs in production
     removeConsole: process.env.NODE_ENV === 'production',
   },
   
-  // Reduce page data size
+  // Enable compression
   compress: true,
+  
+  // Reduce page data size
+  poweredByHeader: false,
+  generateEtags: false,
+  
+  // Headers to prevent caching during development
+  async headers() {
+    return [
+      {
+        source: '/:path*',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=31536000, immutable',
+          },
+        ],
+      },
+    ];
+  },
 }
 
 module.exports = nextConfig
