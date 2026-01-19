@@ -14,25 +14,6 @@ export default function DetectiveLanding() {
 
   return (
     <div className={styles.landing}>
-      {/* SVG Pattern Definition */}
-      <svg width="0" height="0" style={{ position: 'absolute' }}>
-        <defs>
-          <pattern id="corkTexture" x="0" y="0" width="100" height="100" patternUnits="userSpaceOnUse">
-            <rect width="100" height="100" fill="#c4a574"/>
-            <circle cx="10" cy="15" r="1.5" fill="#a68a5a" opacity="0.6"/>
-            <circle cx="45" cy="8" r="1" fill="#8b7355" opacity="0.4"/>
-            <circle cx="78" cy="25" r="1.2" fill="#a68a5a" opacity="0.5"/>
-            <circle cx="23" cy="42" r="0.8" fill="#8b7355" opacity="0.6"/>
-            <circle cx="67" cy="55" r="1.3" fill="#a68a5a" opacity="0.4"/>
-            <circle cx="35" cy="72" r="1" fill="#8b7355" opacity="0.5"/>
-            <circle cx="82" cy="68" r="1.1" fill="#a68a5a" opacity="0.6"/>
-            <circle cx="15" cy="88" r="0.9" fill="#8b7355" opacity="0.4"/>
-            <circle cx="58" cy="91" r="1.4" fill="#a68a5a" opacity="0.5"/>
-            <circle cx="92" cy="45" r="1" fill="#8b7355" opacity="0.6"/>
-          </pattern>
-        </defs>
-      </svg>
-
       <div className={styles.container} ref={containerRef}>
         <div className={styles.backgroundLayer} />
 
