@@ -1,11 +1,10 @@
 'use client'
 
-import React, { useRef } from 'react'
+import React from 'react'
 import { useRouter } from 'next/navigation'
 import styles from './DetectiveLanding.module.css'
 
 export default function DetectiveLanding() {
-  const containerRef = useRef(null)
   const router = useRouter()
 
   const handleLookAround = () => {
@@ -14,29 +13,83 @@ export default function DetectiveLanding() {
 
   return (
     <div className={styles.landing}>
-      <div className={styles.container} ref={containerRef}>
+      <div className={styles.container}>
         <div className={styles.backgroundLayer} />
 
         <div className={styles.corkBoard}>
           <div className={styles.vignette} />
 
-          {/* Google Map */}
-          <MapSection />
+          {/* Google Map - static image only */}
+          <div className={styles.mapContainer}>
+            <div className={styles.tape} style={{ top: -8, left: -8, transform: 'rotate(-45deg)', width: 50, height: 18 }} />
+            <div className={styles.tape} style={{ top: -8, right: -8, transform: 'rotate(45deg)', width: 50, height: 18 }} />
+            <div className={styles.tape} style={{ bottom: -8, left: -8, transform: 'rotate(45deg)', width: 50, height: 18 }} />
+            <div className={styles.tape} style={{ bottom: -8, right: -8, transform: 'rotate(-45deg)', width: 50, height: 18 }} />
+            
+            <div className={styles.mapFrame}>
+              <img src="/Assets/GMap.png" alt="Munich Map" loading="lazy" />
+              
+              {/* Simplified SVG overlay - removed */}
+              <div className={styles.mapMarker} style={{ left: '55%', top: '18%' }} />
+              <div className={styles.mapMarker} style={{ left: '48%', top: '52%' }} />
+              <div className={styles.mapMarker} style={{ left: '65%', top: '72%' }} />
+              <div className={styles.mapMarker} style={{ left: '72%', top: '55%' }} />
+              <div className={styles.mapMarker} style={{ left: '32%', top: '65%' }} />
+              <div className={styles.mapMarker} style={{ left: '72%', top: '85%' }} />
+            </div>
+          </div>
 
           {/* Portrait Photo */}
-          <PortraitSection />
+          <div className={styles.portraitContainer}>
+            <div className={styles.tape} style={{ top: -10, left: 36, transform: 'rotate(-6deg)', width: 70, height: 20 }} />
+            <div className={styles.tape} style={{ top: -14, right: 36, transform: 'rotate(8deg)', width: 70, height: 20 }} />
+            <div className={styles.polaroid}>
+              <img src="/portrait.jpg" alt="Portrait" loading="lazy" />
+            </div>
+          </div>
 
           {/* Handprint */}
-          <HandprintSection />
+          <div className={styles.handprintContainer}>
+            <div className={styles.handprintFrame}>
+              <img src="./Assets/handPrint.png" alt="Handprint" loading="lazy" />
+            </div>
+          </div>
 
           {/* Field Notes */}
-          <FieldNotesSection />
+          <div className={styles.fieldNotes}>
+            <div className={styles.fieldNotesTitle}>FIELD NOTES</div>
+            <div className={styles.fieldNotesLabel}>Subject:</div> Chinmay Patil<br />
+            <div className={styles.fieldNotesLabel} style={{ marginTop: 8 }}>Previous Known Location:</div> Munich<br />
+            <div className={styles.fieldNotesLabel} style={{ marginTop: 8 }}>Specialty:</div> CFD / Aeroacoustics / Visual tools
+            <div className={styles.fieldNotesSkills}>Key Skills:</div>
+            <ul>
+              <li>OpenFOAM & CFD pipelines</li>
+              <li>Python tooling / automation</li>
+              <li>Aeroacoustics analysis</li>
+            </ul>
+            <div className={styles.pushPin} style={{ left: '50%', top: -10, transform: 'translateX(-50%)' }} />
+          </div>
 
           {/* Panoramic Photo */}
-          <PanoramicSection />
+          <div className={styles.panoramicContainer}>
+            <div className={styles.tape} style={{ top: -12, left: 80, transform: 'rotate(-2deg)', width: 80, height: 22 }} />
+            <div className={styles.tape} style={{ top: -8, right: 70, transform: 'rotate(6deg)', width: 80, height: 22 }} />
+            <div className={styles.polaroid}>
+              <img src="/Me2-3x8.jpg" alt="Panoramic" loading="lazy" />
+            </div>
+          </div>
 
           {/* Sticky Notes */}
-          <StickyNotes />
+          <div className={`${styles.sticky} ${styles.stickyTools}`}>
+            <div style={{ fontSize: 14, marginBottom: 6, textDecoration: 'underline' }}>TOOLS</div>
+            <div style={{ fontSize: 11, lineHeight: 1.5 }}>
+              • OpenFOAM<br />
+              • ParaView<br />
+              • Python<br />
+              • Git
+            </div>
+            <div className={styles.pushPin} style={{ left: '50%', top: -9, transform: 'translateX(-50%)' }} />
+          </div>
         </div>
 
         {/* Look Around Button */}
@@ -48,138 +101,4 @@ export default function DetectiveLanding() {
       </div>
     </div>
   )
-}
-
-// Split into smaller components
-function MapSection() {
-  return (
-    <div className={styles.mapContainer}>
-      <Tape top={-8} left={-8} rotate={-45} width={50} height={18} />
-      <Tape top={-8} right={-8} rotate={45} width={50} height={18} />
-      <Tape bottom={-8} left={-8} rotate={45} width={50} height={18} />
-      <Tape bottom={-8} right={-8} rotate={-45} width={50} height={18} />
-      
-      <div className={styles.mapFrame}>
-        <img src="/Assets/GMap.png" alt="Munich Map" />
-        
-        <svg className={styles.mapOverlay}>
-          <circle cx="55%" cy="18%" r="6" fill="#d32f2f" stroke="#fff" strokeWidth="2"/>
-          <circle cx="48%" cy="52%" r="6" fill="#d32f2f" stroke="#fff" strokeWidth="2"/>
-          <circle cx="65%" cy="72%" r="6" fill="#d32f2f" stroke="#fff" strokeWidth="2"/>
-          <circle cx="72%" cy="55%" r="6" fill="#d32f2f" stroke="#fff" strokeWidth="2"/>
-          <circle cx="32%" cy="65%" r="6" fill="#d32f2f" stroke="#fff" strokeWidth="2"/>
-          <circle cx="72%" cy="85%" r="6" fill="#d32f2f" stroke="#fff" strokeWidth="2"/>
-        </svg>
-      </div>
-    </div>
-  )
-}
-
-function PortraitSection() {
-  return (
-    <div className={styles.portraitContainer}>
-      <Tape top={-10} left={36} rotate={-6} width={70} height={20} />
-      <Tape top={-14} right={36} rotate={8} width={70} height={20} />
-      <div className={styles.polaroid}>
-        <img src="/portrait.jpg" alt="Portrait" style={{ filter: 'sepia(0.22) contrast(1.08)' }} />
-      </div>
-    </div>
-  )
-}
-
-function HandprintSection() {
-  return (
-    <div className={styles.handprintContainer}>
-      <div className={styles.handprintFrame}>
-        <img src="./Assets/handPrint.png" alt="Handprint" />
-      </div>
-    </div>
-  )
-}
-
-function FieldNotesSection() {
-  return (
-    <div className={styles.fieldNotes}>
-      <div className={styles.fieldNotesTitle}>FIELD NOTES</div>
-      <div className={styles.fieldNotesLabel}>Subject:</div> Chinmay Patil<br />
-      <div className={styles.fieldNotesLabel} style={{ marginTop: 8 }}>Previous Known Location:</div> Munich<br />
-      <div className={styles.fieldNotesLabel} style={{ marginTop: 8 }}>Specialty:</div> CFD / Aeroacoustics / Visual tools
-      <div className={styles.fieldNotesSkills}>Key Skills:</div>
-      <ul>
-        <li>OpenFOAM & CFD pipelines</li>
-        <li>Python tooling / automation</li>
-        <li>Aeroacoustics analysis</li>
-      </ul>
-      <div className={styles.pushPin} style={{ left: '50%', top: -10, transform: 'translateX(-50%)' }} />
-    </div>
-  )
-}
-
-function PanoramicSection() {
-  return (
-    <div className={styles.panoramicContainer}>
-      <Tape top={-12} left={80} rotate={-2} width={80} height={22} />
-      <Tape top={-8} right={70} rotate={6} width={80} height={22} />
-      <div className={styles.polaroid}>
-        <img src="/Me2-3x8.jpg" alt="Panoramic" style={{ filter: 'sepia(0.15) contrast(1.04)' }} />
-      </div>
-    </div>
-  )
-}
-
-function StickyNotes() {
-  return (
-    <>
-      <div className={`${styles.sticky} ${styles.stickyContact}`}>
-        <div className={styles.stickyTitle}>CONTACT</div>
-        <div className={styles.stickyContent}>patil.chinmay3031@gmail.com</div>
-        <div className={styles.pushPin} style={{ left: '50%', top: -9, transform: 'translateX(-50%)' }} />
-      </div>
-
-      <div className={`${styles.sticky} ${styles.stickyTools}`}>
-        <div style={{ fontSize: 14, marginBottom: 6, textDecoration: 'underline' }}>TOOLS</div>
-        <div style={{ fontSize: 11, lineHeight: 1.5 }}>
-          • OpenFOAM<br />
-          • ParaView<br />
-          • Python<br />
-          • Git
-        </div>
-        <div className={styles.pushPin} style={{ left: '50%', top: -9, transform: 'translateX(-50%)' }} />
-      </div>
-
-      <div className={`${styles.sticky} ${styles.stickyEducation}`}>
-        <div style={{ fontSize: 14, marginBottom: 6, textDecoration: 'underline' }}>EDUCATION</div>
-        <div style={{ fontSize: 11, lineHeight: 1.5 }}>
-          M.Sc. Aerospace<br />
-          Engineering<br />
-          TU Munich
-        </div>
-        <div className={styles.pushPin} style={{ left: '50%', top: -9, transform: 'translateX(-50%)' }} />
-      </div>
-
-      <div className={`${styles.sticky} ${styles.stickyStatus}`}>
-        <div style={{ fontSize: 13, marginBottom: 6, textDecoration: 'underline' }}>STATUS</div>  
-        <div style={{ fontSize: 10, lineHeight: 1.4 }}>
-          Currently seeking<br />
-          opportunities in<br />
-          CFD & simulation
-        </div>
-        <div className={styles.pushPin} style={{ left: '50%', top: -9, transform: 'translateX(-50%)' }} />
-      </div>
-    </>
-  )
-}
-
-function Tape({ top, bottom, left, right, rotate, width, height }) {
-  const style = {
-    ...(top !== undefined && { top }),
-    ...(bottom !== undefined && { bottom }),
-    ...(left !== undefined && { left }),
-    ...(right !== undefined && { right }),
-    transform: `rotate(${rotate}deg)`,
-    width,
-    height
-  }
-  
-  return <div className={styles.tape} style={style} />
 }
