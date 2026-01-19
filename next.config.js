@@ -2,9 +2,17 @@
 const nextConfig = {
   reactStrictMode: true,
   
-  // CRITICAL: Disable all memory-intensive features
+  // Add this for development
+  ...(process.env.NODE_ENV === 'development' && {
+    webpack: (config) => {
+      config.cache = false;
+      return config;
+    },
+  }),
+  
+  // Your existing config...
   images: {
-    unoptimized: true, // Skip image optimization
+    unoptimized: true,
     loader: 'default',
     dangerouslyAllowSVG: true,
   },
